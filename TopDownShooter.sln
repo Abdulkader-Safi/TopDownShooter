@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopDownShooter", "TopDownShooter.csproj", "{CE96295B-0A19-DBD7-55F2-E6ADF8A6498A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE96295B-0A19-DBD7-55F2-E6ADF8A6498A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE96295B-0A19-DBD7-55F2-E6ADF8A6498A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE96295B-0A19-DBD7-55F2-E6ADF8A6498A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE96295B-0A19-DBD7-55F2-E6ADF8A6498A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7919E173-16BA-4F1B-81A0-0035A39A8ACF}
+	EndGlobalSection
+EndGlobal
