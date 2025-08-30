@@ -5,7 +5,7 @@ A top-down shooter game built with MonoGame Framework targeting .NET 8.0.
 ## Prerequisites
 
 - .NET 8.0 SDK
-- MonoGame Framework DesktopGL 3.8.*
+- MonoGame Framework DesktopGL 3.8.\*
 
 ## Getting Started
 
@@ -53,6 +53,7 @@ dotnet clean
 ## Game Loop
 
 The game follows MonoGame's standard pattern:
+
 1. `Initialize()` - One-time initialization
 2. `LoadContent()` - Load game assets
 3. `Update()` / `Draw()` - Main game loop
