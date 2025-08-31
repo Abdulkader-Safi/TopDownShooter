@@ -9,10 +9,10 @@ namespace TopDownShooter.Game.Core;
 
 public class GameRoot : Microsoft.Xna.Framework.Game
 {
-    private GraphicsDeviceManager _graphics;
+    private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private SceneManager _sceneManager;
-    private GameManager _gameManager;
+    private readonly GameManager _gameManager;
 
     public static GameRoot Instance { get; private set; }
     public static InputService Input { get; private set; }

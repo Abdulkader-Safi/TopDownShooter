@@ -16,17 +16,17 @@ public class GameManager
     public bool VSync { get; private set; } = true;
 
     // Debug Settings
-    public bool ShowCollisionBoxes { get; set; } = true;
-    public bool ShowDebugInfo { get; set; } = false;
-    public bool ShowFPS { get; set; } = true;
+    public bool ShowCollisionBoxes { get; private set; } = true;
+    public bool ShowDebugInfo { get; private set; } = false;
+    public bool ShowFps { get; private set; } = true;
     public bool ShowPlayerOutline { get; set; } = true;
 
     // Gameplay Settings
-    public float PlayerMoveSpeed { get; set; } = 5f;
-    public float PlayerDashForce { get; set; } = 15f;
-    public float PlayerDashCooldown { get; set; } = 1f;
-    public float CameraDistance { get; set; } = 18f;
-    public float CameraTilt { get; set; } = 55f;
+    public float PlayerMoveSpeed { get; private set; } = 5f;
+    public float PlayerDashForce { get; private set; } = 15f;
+    public float PlayerDashCooldown { get; private set; } = 1f;
+    public float CameraDistance { get; private set; } = 18f;
+    public float CameraTilt { get; private set; } = 55f;
 
     // Audio Settings
     public float MasterVolume { get; set; } = 1f;
@@ -34,7 +34,7 @@ public class GameManager
     public float MusicVolume { get; set; } = 0.6f;
 
     // Performance Settings
-    public int TargetFPS { get; private set; } = 60;
+    private int TargetFps { get; set; } = 60;
     public bool ShowPerformanceStats { get; set; } = false;
 
     // Input Settings for toggling
@@ -80,7 +80,7 @@ public class GameManager
         // F3 - Toggle FPS Display
         if (keyboard.IsKeyDown(Keys.F3) && !_previousF3State)
         {
-            ShowFPS = !ShowFPS;
+            ShowFps = !ShowFps;
         }
         _previousF3State = keyboard.IsKeyDown(Keys.F3);
 
@@ -99,17 +99,15 @@ public class GameManager
         _previousF11State = keyboard.IsKeyDown(Keys.F11);
     }
 
-    public void SetResolution(int width, int height)
+    private void SetResolution(int width, int height)
     {
-        if (width > 0 && height > 0)
-        {
-            WindowWidth = width;
-            WindowHeight = height;
-            ResolutionChanged?.Invoke(width, height);
-        }
+        if (width <= 0 || height <= 0) return;
+        WindowWidth = width;
+        WindowHeight = height;
+        ResolutionChanged?.Invoke(width, height);
     }
 
-    public void ToggleFullscreen()
+    private void ToggleFullscreen()
     {
         IsFullscreen = !IsFullscreen;
         FullscreenChanged?.Invoke(IsFullscreen);
@@ -117,32 +115,30 @@ public class GameManager
 
     public void SetWindowTitle(string title)
     {
-        if (!string.IsNullOrEmpty(title))
-        {
-            WindowTitle = title;
-            WindowTitleChanged?.Invoke(title);
-        }
+        if (string.IsNullOrEmpty(title)) return;
+        WindowTitle = title;
+        WindowTitleChanged?.Invoke(title);
     }
 
-    public void SetTargetFPS(int fps)
+    private void SetTargetFps(int fps)
     {
-        if (fps > 0 && fps <= 300)
+        if (fps is > 0 and <= 300)
         {
-            TargetFPS = fps;
+            TargetFps = fps;
         }
     }
 
     // Preset resolution methods
-    public void SetResolution720p() => SetResolution(1280, 720);
-    public void SetResolution1080p() => SetResolution(1920, 1080);
-    public void SetResolution1440p() => SetResolution(2560, 1440);
+    private void SetResolution720P() => SetResolution(1280, 720);
+    private void SetResolution1080P() => SetResolution(1920, 1080);
+    public void SetResolution1440P() => SetResolution(2560, 1440);
     public void SetResolutionCustom(int width, int height) => SetResolution(width, height);
 
     // Performance preset methods
     public void SetLowQualityPreset()
     {
-        SetResolution720p();
-        SetTargetFPS(30);
+        SetResolution720P();
+        SetTargetFps(30);
         ShowCollisionBoxes = false;
         ShowDebugInfo = false;
         ShowPerformanceStats = false;
@@ -150,8 +146,8 @@ public class GameManager
 
     public void SetMediumQualityPreset()
     {
-        SetResolution720p();
-        SetTargetFPS(60);
+        SetResolution720P();
+        SetTargetFps(60);
         ShowCollisionBoxes = true;
         ShowDebugInfo = false;
         ShowPerformanceStats = false;
@@ -159,8 +155,8 @@ public class GameManager
 
     public void SetHighQualityPreset()
     {
-        SetResolution1080p();
-        SetTargetFPS(60);
+        SetResolution1080P();
+        SetTargetFps(60);
         ShowCollisionBoxes = true;
         ShowDebugInfo = true;
         ShowPerformanceStats = true;
@@ -170,7 +166,7 @@ public class GameManager
     public string GetDebugInfo()
     {
         return $"Resolution: {WindowWidth}x{WindowHeight}\n" +
-               $"FPS Target: {TargetFPS}\n" +
+               $"FPS Target: {TargetFps}\n" +
                $"Fullscreen: {IsFullscreen}\n" +
                $"Collision Boxes: {ShowCollisionBoxes}\n" +
                $"Debug Info: {ShowDebugInfo}\n" +
@@ -189,7 +185,7 @@ public class GameManager
 
         ShowCollisionBoxes = true;
         ShowDebugInfo = false;
-        ShowFPS = true;
+        ShowFps = true;
         ShowPlayerOutline = true;
 
         PlayerMoveSpeed = 5f;
@@ -202,7 +198,7 @@ public class GameManager
         SfxVolume = 0.8f;
         MusicVolume = 0.6f;
 
-        TargetFPS = 60;
+        TargetFps = 60;
         ShowPerformanceStats = false;
 
         // Trigger events to update the game

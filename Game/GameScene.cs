@@ -187,7 +187,7 @@ public class GameScene : Scene
         var fps = (int)(1.0 / Time.Delta);
         var fpsText = $"FPS: {fps}";
 
-        if (_font != null && GameManager.Instance.ShowFPS)
+        if (_font != null && GameManager.Instance.ShowFps)
         {
             _spriteBatch.DrawString(_font, fpsText, new Vector2(10, 10), Color.White);
         }
@@ -195,7 +195,7 @@ public class GameScene : Scene
         // Show debug UI information
         if (_font != null)
         {
-            int yOffset = GameManager.Instance.ShowFPS ? 30 : 10;
+            int yOffset = GameManager.Instance.ShowFps ? 30 : 10;
 
             // Show collision box toggle status
             var collisionText = GameManager.Instance.ShowCollisionBoxes ? "Collision Boxes: ON (F2)" : "Collision Boxes: OFF (F2)";

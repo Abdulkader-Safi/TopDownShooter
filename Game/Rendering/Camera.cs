@@ -7,13 +7,13 @@ namespace TopDownShooter.Game.Rendering;
 public class Camera
 {
     public static Camera Current { get; set; }
-    
-    public Vector3 Position { get; set; }
-    public Vector3 Target { get; set; }
+
+    private Vector3 Position { get; set; }
+    private Vector3 Target { get; set; }
     public Matrix View { get; private set; }
     public Matrix Projection { get; private set; }
     
-    private GraphicsDevice _graphicsDevice;
+    private readonly GraphicsDevice _graphicsDevice;
     
     public Camera(GraphicsDevice graphicsDevice)
     {
@@ -21,8 +21,8 @@ public class Camera
         ResizeViewport(graphicsDevice);
         Current = this;
     }
-    
-    public void ResizeViewport(GraphicsDevice graphicsDevice)
+
+    private void ResizeViewport(GraphicsDevice graphicsDevice)
     {
         var viewport = graphicsDevice.Viewport;
         float aspectRatio = (float)viewport.Width / viewport.Height;
@@ -35,19 +35,19 @@ public class Camera
         );
     }
     
-    public void SetTopDownFollow(Vector3 focusXZ, float distance = 18f, float tiltDeg = 55f)
+    public void SetTopDownFollow(Vector3 focusXz, float distance = 18f, float tiltDeg = 55f)
     {
         var tiltRad = MathHelper.ToRadians(tiltDeg);
         
         // Position camera behind and above the focus point
         var offset = new Vector3(0, distance * (float)Math.Sin(tiltRad), -distance * (float)Math.Cos(tiltRad));
-        Position = focusXZ + offset;
-        Target = focusXZ;
+        Position = focusXz + offset;
+        Target = focusXz;
         
         UpdateView();
     }
-    
-    public void UpdateView()
+
+    private void UpdateView()
     {
         View = Matrix.CreateLookAt(Position, Target, Vector3.Up);
     }

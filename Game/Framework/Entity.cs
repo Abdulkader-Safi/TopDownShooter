@@ -6,7 +6,7 @@ namespace TopDownShooter.Game.Framework;
 
 public class Entity
 {
-    private Dictionary<Type, object> _components = new Dictionary<Type, object>();
+    private readonly Dictionary<Type, object> _components = new Dictionary<Type, object>();
     
     public Scene Scene { get; set; }
     public Transform Transform { get; private set; }

@@ -5,8 +5,8 @@ namespace TopDownShooter.Game.Physics;
 public class CapsuleCollider : ICollider
 {
     public Vector3 Position { get; set; }
-    public float Radius { get; set; } = 0.5f;
-    public float HalfHeight { get; set; } = 1f;
+    public float Radius { get; init; } = 0.5f;
+    public float HalfHeight { get; init; } = 1f;
     
     public BoundingBox GetBounds()
     {

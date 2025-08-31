@@ -5,7 +5,7 @@ namespace TopDownShooter.Game.Physics;
 public class AabbCollider : ICollider
 {
     public Vector3 Position { get; set; }
-    public Vector3 Size { get; set; } = Vector3.One;
+    public Vector3 Size { get; init; } = Vector3.One;
     
     public BoundingBox GetBounds()
     {

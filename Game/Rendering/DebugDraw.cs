@@ -8,15 +8,10 @@ namespace TopDownShooter.Game.Rendering;
 public static class DebugDraw
 {
     private static BasicEffect _effect;
-    private static List<VertexPositionColor> _lines = new List<VertexPositionColor>();
-    private static bool _isEnabled = false;
-    
-    public static bool IsEnabled 
-    { 
-        get => _isEnabled; 
-        set => _isEnabled = value; 
-    }
-    
+    private static readonly List<VertexPositionColor> Lines = [];
+
+    public static bool IsEnabled { get; set; }
+
     public static void Initialize(GraphicsDevice device)
     {
         _effect = new BasicEffect(device)
@@ -28,15 +23,15 @@ public static class DebugDraw
     
     public static void DrawLine(Vector3 start, Vector3 end, Color color)
     {
-        if (!_isEnabled) return;
+        if (!IsEnabled) return;
         
-        _lines.Add(new VertexPositionColor(start, color));
-        _lines.Add(new VertexPositionColor(end, color));
+        Lines.Add(new VertexPositionColor(start, color));
+        Lines.Add(new VertexPositionColor(end, color));
     }
     
     public static void DrawBox(BoundingBox box, Color color)
     {
-        if (!_isEnabled) return;
+        if (!IsEnabled) return;
         
         var corners = box.GetCorners();
         
@@ -61,14 +56,14 @@ public static class DebugDraw
     
     public static void DrawCapsule(Vector3 position, float radius, float halfHeight, Color color)
     {
-        if (!_isEnabled) return;
+        if (!IsEnabled) return;
         
         // Draw cylinder part
-        int segments = 16; // More segments for smoother appearance
-        for (int i = 0; i < segments; i++)
+        const int segments = 16; // More segments for smoother appearance
+        for (var i = 0; i < segments; i++)
         {
-            float angle1 = (float)i / segments * MathHelper.TwoPi;
-            float angle2 = (float)(i + 1) / segments * MathHelper.TwoPi;
+            var angle1 = (float)i / segments * MathHelper.TwoPi;
+            var angle2 = (float)(i + 1) / segments * MathHelper.TwoPi;
             
             var p1Top = position + new Vector3((float)Math.Cos(angle1) * radius, halfHeight, (float)Math.Sin(angle1) * radius);
             var p2Top = position + new Vector3((float)Math.Cos(angle2) * radius, halfHeight, (float)Math.Sin(angle2) * radius);
@@ -90,19 +85,19 @@ public static class DebugDraw
     
     public static void DrawCapsuleOutline(Vector3 position, float radius, float halfHeight, Color color, float outlineThickness = 0.05f)
     {
-        if (!_isEnabled) return;
+        if (!IsEnabled) return;
         
         // Draw multiple concentric capsules to create thick outline effect
-        for (int layer = 0; layer < 3; layer++)
+        for (var layer = 0; layer < 3; layer++)
         {
-            float layerRadius = radius + (layer * outlineThickness);
-            float layerHeight = halfHeight + (layer * outlineThickness * 0.5f);
+            var layerRadius = radius + (layer * outlineThickness);
+            var layerHeight = halfHeight + (layer * outlineThickness * 0.5f);
             
-            int segments = 20; // High detail for outline
-            for (int i = 0; i < segments; i++)
+            const int segments = 20; // High detail for outline
+            for (var i = 0; i < segments; i++)
             {
-                float angle1 = (float)i / segments * MathHelper.TwoPi;
-                float angle2 = (float)(i + 1) / segments * MathHelper.TwoPi;
+                var angle1 = (float)i / segments * MathHelper.TwoPi;
+                var angle2 = (float)(i + 1) / segments * MathHelper.TwoPi;
                 
                 var p1Top = position + new Vector3((float)Math.Cos(angle1) * layerRadius, layerHeight, (float)Math.Sin(angle1) * layerRadius);
                 var p2Top = position + new Vector3((float)Math.Cos(angle2) * layerRadius, layerHeight, (float)Math.Sin(angle2) * layerRadius);
@@ -128,20 +123,20 @@ public static class DebugDraw
     private static void DrawCapsuleHemispheres(Vector3 position, float radius, float halfHeight, Color color)
     {
         // Draw hemisphere caps (simplified as circles at different heights)
-        int hemisphereSegments = 8;
+        const int hemisphereSegments = 8;
         
         // Top hemisphere
-        for (int h = 1; h <= hemisphereSegments; h++)
+        for (var h = 1; h <= hemisphereSegments; h++)
         {
-            float heightRatio = (float)h / hemisphereSegments;
-            float sphereRadius = radius * (float)Math.Sin(Math.PI * 0.5 * (1.0 - heightRatio));
-            float sphereHeight = halfHeight + radius * heightRatio;
+            var heightRatio = (float)h / hemisphereSegments;
+            var sphereRadius = radius * (float)Math.Sin(Math.PI * 0.5 * (1.0 - heightRatio));
+            var sphereHeight = halfHeight + radius * heightRatio;
             
             // Draw circle at this height
-            for (int i = 0; i < 12; i++)
+            for (var i = 0; i < 12; i++)
             {
-                float angle1 = (float)i / 12 * MathHelper.TwoPi;
-                float angle2 = (float)(i + 1) / 12 * MathHelper.TwoPi;
+                var angle1 = (float)i / 12 * MathHelper.TwoPi;
+                var angle2 = (float)(i + 1) / 12 * MathHelper.TwoPi;
                 
                 var p1 = position + new Vector3((float)Math.Cos(angle1) * sphereRadius, sphereHeight, (float)Math.Sin(angle1) * sphereRadius);
                 var p2 = position + new Vector3((float)Math.Cos(angle2) * sphereRadius, sphereHeight, (float)Math.Sin(angle2) * sphereRadius);
@@ -151,17 +146,17 @@ public static class DebugDraw
         }
         
         // Bottom hemisphere
-        for (int h = 1; h <= hemisphereSegments; h++)
+        for (var h = 1; h <= hemisphereSegments; h++)
         {
-            float heightRatio = (float)h / hemisphereSegments;
-            float sphereRadius = radius * (float)Math.Sin(Math.PI * 0.5 * (1.0 - heightRatio));
-            float sphereHeight = -halfHeight - radius * heightRatio;
+            var heightRatio = (float)h / hemisphereSegments;
+            var sphereRadius = radius * (float)Math.Sin(Math.PI * 0.5 * (1.0 - heightRatio));
+            var sphereHeight = -halfHeight - radius * heightRatio;
             
             // Draw circle at this height
-            for (int i = 0; i < 12; i++)
+            for (var i = 0; i < 12; i++)
             {
-                float angle1 = (float)i / 12 * MathHelper.TwoPi;
-                float angle2 = (float)(i + 1) / 12 * MathHelper.TwoPi;
+                var angle1 = (float)i / 12 * MathHelper.TwoPi;
+                var angle2 = (float)(i + 1) / 12 * MathHelper.TwoPi;
                 
                 var p1 = position + new Vector3((float)Math.Cos(angle1) * sphereRadius, sphereHeight, (float)Math.Sin(angle1) * sphereRadius);
                 var p2 = position + new Vector3((float)Math.Cos(angle2) * sphereRadius, sphereHeight, (float)Math.Sin(angle2) * sphereRadius);
@@ -173,62 +168,65 @@ public static class DebugDraw
     
     public static void DrawSphere(Vector3 center, float radius, Color color)
     {
-        if (!_isEnabled) return;
+        if (!IsEnabled) return;
         
-        int segments = 12;
+        const int segments = 12;
         
         // Draw three circles (XY, XZ, YZ planes)
-        for (int i = 0; i < segments; i++)
+        for (var i = 0; i < segments; i++)
         {
-            float angle1 = (float)i / segments * MathHelper.TwoPi;
-            float angle2 = (float)(i + 1) / segments * MathHelper.TwoPi;
+            var angle1 = (float)i / segments * MathHelper.TwoPi;
+            var angle2 = (float)(i + 1) / segments * MathHelper.TwoPi;
             
             // XY plane
-            var p1XY = center + new Vector3((float)Math.Cos(angle1) * radius, (float)Math.Sin(angle1) * radius, 0);
-            var p2XY = center + new Vector3((float)Math.Cos(angle2) * radius, (float)Math.Sin(angle2) * radius, 0);
-            DrawLine(p1XY, p2XY, color);
+            var p1Xy = center + new Vector3((float)Math.Cos(angle1) * radius, (float)Math.Sin(angle1) * radius, 0);
+            var p2Xy = center + new Vector3((float)Math.Cos(angle2) * radius, (float)Math.Sin(angle2) * radius, 0);
+            DrawLine(p1Xy, p2Xy, color);
             
             // XZ plane  
-            var p1XZ = center + new Vector3((float)Math.Cos(angle1) * radius, 0, (float)Math.Sin(angle1) * radius);
-            var p2XZ = center + new Vector3((float)Math.Cos(angle2) * radius, 0, (float)Math.Sin(angle2) * radius);
-            DrawLine(p1XZ, p2XZ, color);
+            var p1Xz = center + new Vector3((float)Math.Cos(angle1) * radius, 0, (float)Math.Sin(angle1) * radius);
+            var p2Xz = center + new Vector3((float)Math.Cos(angle2) * radius, 0, (float)Math.Sin(angle2) * radius);
+            DrawLine(p1Xz, p2Xz, color);
             
             // YZ plane
-            var p1YZ = center + new Vector3(0, (float)Math.Cos(angle1) * radius, (float)Math.Sin(angle1) * radius);
-            var p2YZ = center + new Vector3(0, (float)Math.Cos(angle2) * radius, (float)Math.Sin(angle2) * radius);
-            DrawLine(p1YZ, p2YZ, color);
+            var p1Yz = center + new Vector3(0, (float)Math.Cos(angle1) * radius, (float)Math.Sin(angle1) * radius);
+            var p2Yz = center + new Vector3(0, (float)Math.Cos(angle2) * radius, (float)Math.Sin(angle2) * radius);
+            DrawLine(p1Yz, p2Yz, color);
         }
     }
     
     public static void Render(GraphicsDevice device, Matrix view, Matrix projection)
     {
-        if (!_isEnabled || _lines.Count == 0) return;
+        if (!IsEnabled || Lines.Count == 0) return;
         
         if (_effect == null)
             Initialize(device);
-        
-        _effect.World = Matrix.Identity;
-        _effect.View = view;
-        _effect.Projection = projection;
-        
-        device.DepthStencilState = DepthStencilState.Default;
-        device.RasterizerState = RasterizerState.CullNone;
-        device.BlendState = BlendState.AlphaBlend;
-        
-        foreach (var pass in _effect.CurrentTechnique.Passes)
+
+        if (_effect != null)
         {
-            pass.Apply();
-            
-            if (_lines.Count >= 2)
+            _effect.World = Matrix.Identity;
+            _effect.View = view;
+            _effect.Projection = projection;
+
+            device.DepthStencilState = DepthStencilState.Default;
+            device.RasterizerState = RasterizerState.CullNone;
+            device.BlendState = BlendState.AlphaBlend;
+
+            foreach (var pass in _effect.CurrentTechnique.Passes)
             {
-                device.DrawUserPrimitives(
-                    PrimitiveType.LineList,
-                    _lines.ToArray(),
-                    0,
-                    _lines.Count / 2);
+                pass.Apply();
+
+                if (Lines.Count >= 2)
+                {
+                    device.DrawUserPrimitives(
+                        PrimitiveType.LineList,
+                        Lines.ToArray(),
+                        0,
+                        Lines.Count / 2);
+                }
             }
         }
-        
-        _lines.Clear();
+
+        Lines.Clear();
     }
 }

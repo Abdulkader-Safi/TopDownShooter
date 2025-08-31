@@ -5,10 +5,10 @@ namespace TopDownShooter.Game.World;
 
 public class NavGrid
 {
-    private int _width;
-    private int _height;
-    private float _cellSize;
-    private bool[,] _walkable;
+    private readonly int _width;
+    private readonly int _height;
+    private readonly float _cellSize;
+    private readonly bool[,] _walkable;
 
     public NavGrid(int width, int height, float cellSize)
     {

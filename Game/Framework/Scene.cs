@@ -5,14 +5,14 @@ namespace TopDownShooter.Game.Framework;
 
 public abstract class Scene
 {
-    protected List<Entity> entities = new List<Entity>();
+    private List<Entity> entities = [];
     
     public virtual void Initialize() { }
     public virtual void LoadContent() { }
     
     public virtual void Update()
     {
-        for (int i = entities.Count - 1; i >= 0; i--)
+        for (var i = entities.Count - 1; i >= 0; i--)
         {
             if (i < entities.Count)
                 entities[i].Update();

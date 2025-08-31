@@ -5,7 +5,7 @@ namespace TopDownShooter.Game.Core;
 
 public static class Extensions
 {
-    public static Vector3 XZ(this Vector3 v)
+    public static Vector3 Xz(this Vector3 v)
     {
         return new Vector3(v.X, 0, v.Z);
     }
@@ -27,7 +27,7 @@ public static class Extensions
         if (Math.Abs(ray.Direction.Y) < 0.0001f)
             return false;
 
-        float t = -ray.Position.Y / ray.Direction.Y;
+        var t = -ray.Position.Y / ray.Direction.Y;
         if (t < 0)
             return false;
 

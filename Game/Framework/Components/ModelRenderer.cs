@@ -67,7 +67,7 @@ public class ModelRenderer : IComponent, IDrawable
             Vector3.Left, Vector3.Left, Vector3.Left, Vector3.Left
         };
 
-        for (int i = 0; i < 24; i++)
+        for (var i = 0; i < 24; i++)
         {
             vertices[i] = new VertexPositionColor(positions[i], Color.White);
         }
@@ -105,6 +105,7 @@ public class ModelRenderer : IComponent, IDrawable
 
         var world = Matrix.CreateScale(Size) * Entity.Transform.WorldMatrix;
 
+        if (_effect == null) return;
         _effect.World = world;
         _effect.View = camera.View;
         _effect.Projection = camera.Projection;
@@ -116,7 +117,8 @@ public class ModelRenderer : IComponent, IDrawable
         foreach (var pass in _effect.CurrentTechnique.Passes)
         {
             pass.Apply();
-            device.DrawIndexedPrimitives(Microsoft.Xna.Framework.Graphics.PrimitiveType.TriangleList, 0, 0, _boxIndexCount / 3);
+            device.DrawIndexedPrimitives(Microsoft.Xna.Framework.Graphics.PrimitiveType.TriangleList, 0, 0,
+                _boxIndexCount / 3);
         }
     }
 }

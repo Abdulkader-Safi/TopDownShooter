@@ -12,13 +12,14 @@ namespace TopDownShooter.Game.Gameplay.Player;
 
 public class PlayerController : Entity, TopDownShooter.Game.Framework.Components.IUpdateable
 {
-    private CharacterMotor _motor;
-    private ModelRenderer _renderer;
-    private Vector3 _aimTarget;
+    private readonly CharacterMotor _motor;
+    private readonly ModelRenderer _renderer;
+
     private float _dashCooldown = 0f;
     // Movement settings now come from GameManager
 
-    public Vector3 AimTarget => _aimTarget;
+    public Vector3 AimTarget { get; private set; }
+
     public float DashCooldownRatio => MathHelper.Max(0f, _dashCooldown / GameManager.Instance.PlayerDashCooldown);
 
     public PlayerController()
@@ -67,7 +68,7 @@ public class PlayerController : Entity, TopDownShooter.Game.Framework.Components
         {
             var dashDirection = worldMovement.LengthSquared() > 0 ?
                 Vector3.Normalize(worldMovement) :
-                Vector3.Normalize(_aimTarget - Transform.Position).XZ();
+                Vector3.Normalize(AimTarget - Transform.Position).Xz();
 
             worldMovement = dashDirection * GameManager.Instance.PlayerDashForce;
             _dashCooldown = GameManager.Instance.PlayerDashCooldown;
@@ -92,10 +93,10 @@ public class PlayerController : Entity, TopDownShooter.Game.Framework.Components
 
         if (ray.RayPlaneY0(out var hitPoint))
         {
-            _aimTarget = hitPoint;
+            AimTarget = hitPoint;
 
             // Face the aim target
-            var direction = (_aimTarget - Transform.Position).XZ();
+            var direction = (AimTarget - Transform.Position).Xz();
             if (direction.LengthSquared() > 0.001f)
             {
                 var angle = (float)Math.Atan2(direction.X, -direction.Z);

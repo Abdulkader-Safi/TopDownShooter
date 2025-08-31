@@ -9,10 +9,10 @@ namespace TopDownShooter.Game.Gameplay.Combat;
 
 public class Hitbox : Entity, TopDownShooter.Game.Framework.Components.IUpdateable
 {
-    public Vector3 Position { get; set; }
-    public float Radius { get; set; } = 1f;
-    public float Damage { get; set; } = 10f;
-    public float Duration { get; set; } = 0.1f;
+    public Vector3 Position { get; init; }
+    public float Radius { get; init; } = 1f;
+    public float Damage { get; init; } = 10f;
+    public float Duration { get; init; } = 0.1f;
     
     private float _timeAlive = 0f;
     private bool _hasHit = false;
@@ -42,12 +42,10 @@ public class Hitbox : Entity, TopDownShooter.Game.Framework.Components.IUpdateab
             if (enemy.IsDead) continue;
             
             var distance = Vector3.Distance(Position, enemy.GetHurtboxCenter());
-            if (distance <= Radius + enemy.GetHurtboxRadius())
-            {
-                enemy.TakeDamage(Damage);
-                _hasHit = true;
-                break;
-            }
+            if (!(distance <= Radius + enemy.GetHurtboxRadius())) continue;
+            enemy.TakeDamage(Damage);
+            _hasHit = true;
+            break;
         }
     }
 }
@@ -57,16 +55,16 @@ public class DamageText : Entity, TopDownShooter.Game.Framework.Components.IUpda
     private Vector3 _startPosition;
     private Vector3 _velocity;
     private float _timeAlive;
-    private string _text;
-    private const float LIFETIME = 1f;
-    private const float RISE_SPEED = 2f;
+    private readonly string _text;
+    private const float Lifetime = 1f;
+    private const float RiseSpeed = 2f;
     
     public DamageText(Vector3 position, string text)
     {
         _startPosition = position;
         Transform.Position = position;
         _text = text;
-        _velocity = Vector3.Up * RISE_SPEED;
+        _velocity = Vector3.Up * RiseSpeed;
     }
     
     public override void Update()
@@ -79,12 +77,12 @@ public class DamageText : Entity, TopDownShooter.Game.Framework.Components.IUpda
         // Slow down over time
         _velocity *= 0.98f;
         
-        if (_timeAlive >= LIFETIME)
+        if (_timeAlive >= Lifetime)
         {
             Scene?.RemoveEntity(this);
         }
     }
     
     public string GetText() => _text;
-    public float GetAlpha() => Math.Max(0f, 1f - (_timeAlive / LIFETIME));
+    public float GetAlpha() => Math.Max(0f, 1f - (_timeAlive / Lifetime));
 }

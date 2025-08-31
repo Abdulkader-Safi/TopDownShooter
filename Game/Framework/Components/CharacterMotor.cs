@@ -11,7 +11,7 @@ public class CharacterMotor : IComponent, IUpdateable
 
     public float Radius { get; set; } = 0.5f;
     public float Height { get; set; } = 1.8f;
-    public float GroundSnapDistance { get; set; } = 0.1f;
+    private float GroundSnapDistance { get; set; } = 0.1f;
     public bool IsGrounded { get; private set; }
 
     private Vector3 _velocity;
@@ -70,7 +70,7 @@ public class CharacterMotor : IComponent, IUpdateable
         var currentPos = startPos;
         var remainingMovement = movement;
 
-        for (int i = 0; i < maxIterations && remainingMovement.LengthSquared() > 0.0001f; i++)
+        for (var i = 0; i < maxIterations && remainingMovement.LengthSquared() > 0.0001f; i++)
         {
             var targetPos = currentPos + remainingMovement;
 

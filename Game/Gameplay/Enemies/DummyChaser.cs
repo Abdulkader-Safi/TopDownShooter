@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Microsoft.Xna.Framework;
 using TopDownShooter.Game.Core;
 using TopDownShooter.Game.Framework;
@@ -11,12 +12,12 @@ namespace TopDownShooter.Game.Gameplay.Enemies;
 
 public class DummyChaser : Entity, TopDownShooter.Game.Framework.Components.IUpdateable
 {
-    private CharacterMotor _motor;
-    private ModelRenderer _renderer;
+    private readonly CharacterMotor _motor;
+    private readonly ModelRenderer _renderer;
     private float _health = 100f;
     private float _flashTimer = 0f;
-    private const float MOVE_SPEED = 2.5f;
-    private const float FLASH_DURATION = 0.2f;
+    private const float MoveSpeed = 2.5f;
+    private const float FlashDuration = 0.2f;
     
     public float Health => _health;
     public bool IsDead => _health <= 0f;
@@ -53,18 +54,16 @@ public class DummyChaser : Entity, TopDownShooter.Game.Framework.Components.IUpd
         
         var toPlayer = player.Transform.Position - Transform.Position;
         toPlayer.Y = 0; // Keep movement on XZ plane
-        
-        if (toPlayer.LengthSquared() > 0.1f)
-        {
-            var direction = Vector3.Normalize(toPlayer);
-            var desiredVelocity = direction * MOVE_SPEED;
+
+        if (!(toPlayer.LengthSquared() > 0.1f)) return;
+        var direction = Vector3.Normalize(toPlayer);
+        var desiredVelocity = direction * MoveSpeed;
             
-            _motor.Move(desiredVelocity, Time.Delta);
+        _motor.Move(desiredVelocity, Time.Delta);
             
-            // Face the player
-            var angle = (float)Math.Atan2(direction.X, -direction.Z);
-            Transform.Rotation = new Vector3(0, angle, 0);
-        }
+        // Face the player
+        var angle = (float)Math.Atan2(direction.X, -direction.Z);
+        Transform.Rotation = new Vector3(0, angle, 0);
     }
     
     private void UpdateVisuals()
@@ -83,10 +82,10 @@ public class DummyChaser : Entity, TopDownShooter.Game.Framework.Components.IUpd
     public void TakeDamage(float damage)
     {
         _health -= damage;
-        _flashTimer = FLASH_DURATION;
+        _flashTimer = FlashDuration;
         
         // Create damage text
-        var damageText = new DamageText(Transform.Position + Vector3.Up * 2f, damage.ToString());
+        var damageText = new DamageText(Transform.Position + Vector3.Up * 2f, damage.ToString(CultureInfo.InvariantCulture));
         Scene?.AddEntity(damageText);
     }
     
