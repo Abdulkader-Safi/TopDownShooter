@@ -99,7 +99,7 @@ public class PlayerController : Entity, TopDownShooter.Game.Framework.Components
             var direction = (AimTarget - Transform.Position).Xz();
             if (direction.LengthSquared() > 0.001f)
             {
-                var angle = (float)Math.Atan2(direction.X, -direction.Z);
+                var angle = (float)Math.Atan2(direction.X, direction.Z);
                 Transform.Rotation = new Vector3(0, angle, 0);
             }
         }
