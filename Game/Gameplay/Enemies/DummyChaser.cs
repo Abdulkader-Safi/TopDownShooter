@@ -62,7 +62,7 @@ public class DummyChaser : Entity, TopDownShooter.Game.Framework.Components.IUpd
         _motor.Move(desiredVelocity, Time.Delta);
             
         // Face the player
-        var angle = (float)Math.Atan2(direction.X, -direction.Z);
+        var angle = (float)Math.Atan2(direction.X, direction.Z);
         Transform.Rotation = new Vector3(0, angle, 0);
     }
     

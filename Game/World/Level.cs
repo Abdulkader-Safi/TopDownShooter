@@ -21,13 +21,12 @@ public class Level
         CreateWall(scene, collisionWorld, new Vector3(8, 1.5f, -8), new Vector3(2, 3, 4));
         CreateWall(scene, collisionWorld, new Vector3(-8, 1.5f, 8), new Vector3(4, 3, 2));
 
-        // Create floor
-        var floor = new Entity();
-        floor.Transform.Position = new Vector3(0, 0, 0);
-        var floorRenderer = floor.AddComponent<ModelRenderer>();
-        floorRenderer.Color = Color.Gray;
-        floorRenderer.Size = new Vector3(30, 0.1f, 30);
-        scene.AddEntity(floor);
+        // Create level transition trigger (green box)
+        var levelTrigger = new LevelTransitionTrigger(collisionWorld, new Vector3(12, 1, 12), new Vector3(2, 2, 2));
+        scene.AddEntity(levelTrigger);
+
+        // Create floor with collision
+        CreateFloor(scene, collisionWorld, new Vector3(0, 0f, 0), new Vector3(30, 0.1f, 30), Color.Gray);
     }
 
     private static void CreateWall(Scene scene, CollisionWorld collisionWorld, Vector3 position, Vector3 size)
@@ -39,6 +38,25 @@ public class Level
         renderer.Color = Color.DarkGray;
         renderer.Size = size;
         scene.AddEntity(wall);
+
+        // Physics representation
+        var collider = new AabbCollider
+        {
+            Position = position,
+            Size = size
+        };
+        collisionWorld.AddStatic(collider);
+    }
+
+    private static void CreateFloor(Scene scene, CollisionWorld collisionWorld, Vector3 position, Vector3 size, Color color)
+    {
+        // Visual representation
+        var floor = new Entity();
+        floor.Transform.Position = position;
+        var renderer = floor.AddComponent<ModelRenderer>();
+        renderer.Color = color;
+        renderer.Size = size;
+        scene.AddEntity(floor);
 
         // Physics representation
         var collider = new AabbCollider

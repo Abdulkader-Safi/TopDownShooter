@@ -14,7 +14,11 @@ public class CharacterMotor : IComponent, IUpdateable
     private float GroundSnapDistance { get; set; } = 0.1f;
     public bool IsGrounded { get; private set; }
 
-    private Vector3 _velocity;
+    // Gravity settings
+    private float Gravity { get; set; } = 20f; // Units per second squared
+    private float TerminalVelocity { get; set; } = 30f; // Maximum fall speed
+    
+    private Vector3 _verticalVelocity; // Separate vertical velocity for gravity
     private CapsuleCollider _collider;
 
     public void Initialize()
@@ -31,38 +35,79 @@ public class CharacterMotor : IComponent, IUpdateable
     {
         if (_collider == null) Initialize();
 
-        _velocity = desiredVelocity;
-        var movement = _velocity * deltaTime;
-        var originalPosition = Entity.Transform.Position;
-
-        // Perform swept movement with collision resolution
-        var newPosition = SweepMove(originalPosition, movement, 3);
-
-        // Simple ground snapping - only if we didn't move much horizontally
-        var horizontalMovement = new Vector3(newPosition.X - originalPosition.X, 0, newPosition.Z - originalPosition.Z);
-        if (horizontalMovement.LengthSquared() < 0.1f) // Only snap if we're not sliding along walls
+        // Apply gravity to vertical velocity
+        if (!IsGrounded)
         {
-            var groundCheckStart = newPosition + Vector3.UnitY * 0.1f;
-            var groundCheckEnd = newPosition - Vector3.UnitY * (GroundSnapDistance + 0.1f);
-
-            if (CollisionWorld.Instance.CastCapsule(groundCheckStart, groundCheckEnd, Radius, Height * 0.5f, out var groundHit))
-            {
-                newPosition.Y = groundHit.Position.Y + (Height * 0.5f);
-                IsGrounded = true;
-            }
-            else
-            {
-                IsGrounded = false;
-            }
+            _verticalVelocity.Y -= Gravity * deltaTime;
+            // Clamp to terminal velocity
+            if (_verticalVelocity.Y < -TerminalVelocity)
+                _verticalVelocity.Y = -TerminalVelocity;
         }
         else
         {
-            // Assume grounded if we're moving horizontally (sliding along walls)
-            IsGrounded = true;
+            // Reset vertical velocity when grounded
+            _verticalVelocity.Y = 0f;
         }
+
+        // Separate horizontal and vertical movement to avoid floor collision issues
+        var horizontalVelocity = new Vector3(desiredVelocity.X, 0, desiredVelocity.Z);
+        var horizontalMovement = horizontalVelocity * deltaTime;
+        var verticalMovement = new Vector3(0, _verticalVelocity.Y * deltaTime, 0);
+        
+        var originalPosition = Entity.Transform.Position;
+
+        // First, perform horizontal movement
+        var afterHorizontal = SweepMove(originalPosition, horizontalMovement, 3);
+        
+        // Then, perform vertical movement separately
+        var newPosition = SweepMove(afterHorizontal, verticalMovement, 3);
+
+        // Ground detection - check if we're standing on something
+        CheckGrounded(newPosition);
 
         Entity.Transform.Position = newPosition;
         _collider.Position = newPosition;
+    }
+
+    public void Jump(float jumpForce)
+    {
+        if (IsGrounded)
+        {
+            _verticalVelocity.Y = jumpForce;
+            IsGrounded = false;
+        }
+    }
+
+    private void CheckGrounded(Vector3 position)
+    {
+        // Check directly downward from character center for ground
+        var groundCheckStart = position;
+        var groundCheckEnd = position - Vector3.UnitY * (Height * 0.5f + GroundSnapDistance + 0.1f);
+
+        // Use a smaller capsule for ground checking to avoid side collisions
+        if (CollisionWorld.Instance.CastCapsule(groundCheckStart, groundCheckEnd, Radius * 0.8f, Height * 0.4f, out var groundHit))
+        {
+            // Check if we're actually above the ground (not hitting a wall)
+            var hitNormal = Vector3.UnitY; // Assume upward normal for floors
+            var distanceToGround = groundCheckStart.Y - groundHit.Position.Y;
+            
+            // Only consider it ground if we're close and above it
+            if (distanceToGround >= 0 && distanceToGround <= Height * 0.5f + 0.2f)
+            {
+                // If we're falling or on ground, snap to ground level
+                if (_verticalVelocity.Y <= 0.1f)
+                {
+                    var groundY = groundHit.Position.Y + (Height * 0.5f) + 0.05f; // Slight offset above ground
+                    Entity.Transform.Position = new Vector3(position.X, groundY, position.Z);
+                    _verticalVelocity.Y = 0f;
+                    IsGrounded = true;
+                    return;
+                }
+            }
+        }
+        
+        // Not grounded
+        IsGrounded = false;
     }
 
     private Vector3 SweepMove(Vector3 startPos, Vector3 movement, int maxIterations)

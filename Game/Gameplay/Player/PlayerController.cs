@@ -19,6 +19,7 @@ public class PlayerController : Entity, TopDownShooter.Game.Framework.Components
     // Movement settings now come from GameManager
 
     public Vector3 AimTarget { get; private set; }
+    public CharacterMotor Motor => _motor;
 
     public float DashCooldownRatio => MathHelper.Max(0f, _dashCooldown / GameManager.Instance.PlayerDashCooldown);
 
@@ -31,7 +32,7 @@ public class PlayerController : Entity, TopDownShooter.Game.Framework.Components
         _renderer.Color = Color.Blue;
         _renderer.Size = new Vector3(1f, 1.8f, 1f);
 
-        Transform.Position = new Vector3(0, 1f, 0);
+        Transform.Position = new Vector3(0, 2f, 0); // Higher starting position above floor
     }
 
     public override void Update()
@@ -72,6 +73,12 @@ public class PlayerController : Entity, TopDownShooter.Game.Framework.Components
 
             worldMovement = dashDirection * GameManager.Instance.PlayerDashForce;
             _dashCooldown = GameManager.Instance.PlayerDashCooldown;
+        }
+
+        // Jump input (Space key)
+        if (input.IsKeyPressed(Keys.Space) && Motor.IsGrounded)
+        {
+            Motor.Jump(12f); // Jump with upward velocity of 12 units/sec
         }
 
         _motor.Move(worldMovement, Time.Delta);

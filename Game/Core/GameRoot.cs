@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TopDownShooter.Game.Framework;
 using TopDownShooter.Game.Services;
+using TopDownShooter.Game.World;
 
 namespace TopDownShooter.Game.Core;
 
@@ -19,6 +20,8 @@ public class GameRoot : Microsoft.Xna.Framework.Game
     public static AudioService Audio { get; private set; }
     public static AssetService Assets { get; private set; }
 
+    public SceneManager SceneManager => _sceneManager;
+
     public GameRoot()
     {
         Instance = this;
@@ -32,14 +35,14 @@ public class GameRoot : Microsoft.Xna.Framework.Game
 
         // Initialize GameManager first
         _gameManager = new GameManager();
-        
+
         // Setup window and graphics based on GameManager settings
         Window.Title = _gameManager.WindowTitle;
         _graphics.PreferredBackBufferWidth = _gameManager.WindowWidth;
         _graphics.PreferredBackBufferHeight = _gameManager.WindowHeight;
         _graphics.IsFullScreen = _gameManager.IsFullscreen;
         _graphics.SynchronizeWithVerticalRetrace = _gameManager.VSync;
-        
+
         // Subscribe to GameManager events
         _gameManager.ResolutionChanged += OnResolutionChanged;
         _gameManager.FullscreenChanged += OnFullscreenChanged;
@@ -62,7 +65,7 @@ public class GameRoot : Microsoft.Xna.Framework.Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         Assets.Initialize(Content, GraphicsDevice);
-        _sceneManager.LoadScene(new TopDownShooter.Game.GameScene());
+        LevelManager.Instance.LoadFirstLevel();
     }
 
     protected override void Update(GameTime gameTime)
