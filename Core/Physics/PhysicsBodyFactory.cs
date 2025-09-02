@@ -14,13 +14,13 @@ public static class PhysicsBodyFactory
         var collider = entity.AddComponent<ColliderComponent>();
         collider.SetAsBox(size);
         collider.Initialize();
-        
+
         var rigidBody = entity.AddComponent<RigidBodyComponent>();
         rigidBody.BodyType = BodyType.Dynamic;
         rigidBody.Mass = mass;
         rigidBody.Initialize(collider.CollidableDescription);
     }
-    
+
     /// <summary>
     /// Creates a dynamic physics body with a sphere collider
     /// </summary>
@@ -29,13 +29,13 @@ public static class PhysicsBodyFactory
         var collider = entity.AddComponent<ColliderComponent>();
         collider.SetAsSphere(radius);
         collider.Initialize();
-        
+
         var rigidBody = entity.AddComponent<RigidBodyComponent>();
         rigidBody.BodyType = BodyType.Dynamic;
         rigidBody.Mass = mass;
         rigidBody.Initialize(collider.CollidableDescription);
     }
-    
+
     /// <summary>
     /// Creates a dynamic physics body with a capsule collider
     /// </summary>
@@ -44,13 +44,13 @@ public static class PhysicsBodyFactory
         var collider = entity.AddComponent<ColliderComponent>();
         collider.SetAsCapsule(radius, height);
         collider.Initialize();
-        
+
         var rigidBody = entity.AddComponent<RigidBodyComponent>();
         rigidBody.BodyType = BodyType.Dynamic;
         rigidBody.Mass = mass;
         rigidBody.Initialize(collider.CollidableDescription);
     }
-    
+
     /// <summary>
     /// Creates a kinematic physics body with a box collider (moves but not affected by physics)
     /// </summary>
@@ -59,12 +59,12 @@ public static class PhysicsBodyFactory
         var collider = entity.AddComponent<ColliderComponent>();
         collider.SetAsBox(size);
         collider.Initialize();
-        
+
         var rigidBody = entity.AddComponent<RigidBodyComponent>();
         rigidBody.BodyType = BodyType.Kinematic;
         rigidBody.Initialize(collider.CollidableDescription);
     }
-    
+
     /// <summary>
     /// Creates a kinematic physics body with a sphere collider (moves but not affected by physics)
     /// </summary>
@@ -73,12 +73,12 @@ public static class PhysicsBodyFactory
         var collider = entity.AddComponent<ColliderComponent>();
         collider.SetAsSphere(radius);
         collider.Initialize();
-        
+
         var rigidBody = entity.AddComponent<RigidBodyComponent>();
         rigidBody.BodyType = BodyType.Kinematic;
         rigidBody.Initialize(collider.CollidableDescription);
     }
-    
+
     /// <summary>
     /// Creates a kinematic physics body with a capsule collider (moves but not affected by physics)
     /// </summary>
@@ -87,12 +87,12 @@ public static class PhysicsBodyFactory
         var collider = entity.AddComponent<ColliderComponent>();
         collider.SetAsCapsule(radius, height);
         collider.Initialize();
-        
+
         var rigidBody = entity.AddComponent<RigidBodyComponent>();
         rigidBody.BodyType = BodyType.Kinematic;
         rigidBody.Initialize(collider.CollidableDescription);
     }
-    
+
     /// <summary>
     /// Creates a static physics body with a box collider (immovable)
     /// </summary>
@@ -101,12 +101,12 @@ public static class PhysicsBodyFactory
         var collider = entity.AddComponent<ColliderComponent>();
         collider.SetAsBox(size);
         collider.Initialize();
-        
+
         var rigidBody = entity.AddComponent<RigidBodyComponent>();
         rigidBody.BodyType = BodyType.Static;
         rigidBody.Initialize(collider.CollidableDescription);
     }
-    
+
     /// <summary>
     /// Creates a static physics body with a sphere collider (immovable)
     /// </summary>
@@ -115,12 +115,12 @@ public static class PhysicsBodyFactory
         var collider = entity.AddComponent<ColliderComponent>();
         collider.SetAsSphere(radius);
         collider.Initialize();
-        
+
         var rigidBody = entity.AddComponent<RigidBodyComponent>();
         rigidBody.BodyType = BodyType.Static;
         rigidBody.Initialize(collider.CollidableDescription);
     }
-    
+
     /// <summary>
     /// Creates a static physics body with a capsule collider (immovable)
     /// </summary>
@@ -129,7 +129,7 @@ public static class PhysicsBodyFactory
         var collider = entity.AddComponent<ColliderComponent>();
         collider.SetAsCapsule(radius, height);
         collider.Initialize();
-        
+
         var rigidBody = entity.AddComponent<RigidBodyComponent>();
         rigidBody.BodyType = BodyType.Static;
         rigidBody.Initialize(collider.CollidableDescription);

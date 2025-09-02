@@ -17,7 +17,7 @@ public class CharacterMotor : IComponent, IUpdateable
     // Gravity settings
     private float Gravity { get; set; } = 20f; // Units per second squared
     private float TerminalVelocity { get; set; } = 30f; // Maximum fall speed
-    
+
     private Vector3 _verticalVelocity; // Separate vertical velocity for gravity
     private CapsuleCollider _collider;
 
@@ -53,12 +53,12 @@ public class CharacterMotor : IComponent, IUpdateable
         var horizontalVelocity = new Vector3(desiredVelocity.X, 0, desiredVelocity.Z);
         var horizontalMovement = horizontalVelocity * deltaTime;
         var verticalMovement = new Vector3(0, _verticalVelocity.Y * deltaTime, 0);
-        
+
         var originalPosition = Entity.Transform.Position;
 
         // First, perform horizontal movement
         var afterHorizontal = SweepMove(originalPosition, horizontalMovement, 3);
-        
+
         // Then, perform vertical movement separately
         var newPosition = SweepMove(afterHorizontal, verticalMovement, 3);
 
@@ -90,7 +90,7 @@ public class CharacterMotor : IComponent, IUpdateable
             // Check if we're actually above the ground (not hitting a wall)
             var hitNormal = Vector3.UnitY; // Assume upward normal for floors
             var distanceToGround = groundCheckStart.Y - groundHit.Position.Y;
-            
+
             // Only consider it ground if we're close and above it
             if (distanceToGround >= 0 && distanceToGround <= Height * 0.5f + 0.2f)
             {
@@ -105,7 +105,7 @@ public class CharacterMotor : IComponent, IUpdateable
                 }
             }
         }
-        
+
         // Not grounded
         IsGrounded = false;
     }

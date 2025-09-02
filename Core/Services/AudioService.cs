@@ -6,12 +6,12 @@ public class AudioService
     {
         // Placeholder for audio implementation
     }
-    
+
     public void PlayMusic(string musicName)
     {
         // Placeholder for music implementation
     }
-    
+
     public void StopMusic()
     {
         // Placeholder for stopping music

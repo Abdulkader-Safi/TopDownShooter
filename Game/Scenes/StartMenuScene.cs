@@ -44,7 +44,7 @@ public class StartMenuScene : Scene
     public override void LoadContent()
     {
         base.LoadContent();
-        
+
         // Create default system font
         _font = GameRoot.Instance.Content.Load<SpriteFont>("DefaultFont");
     }

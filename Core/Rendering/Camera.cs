@@ -12,9 +12,9 @@ public class Camera
     private Vector3 Target { get; set; }
     public Matrix View { get; private set; }
     public Matrix Projection { get; private set; }
-    
+
     private readonly GraphicsDevice _graphicsDevice;
-    
+
     public Camera(GraphicsDevice graphicsDevice)
     {
         _graphicsDevice = graphicsDevice;
@@ -26,7 +26,7 @@ public class Camera
     {
         var viewport = graphicsDevice.Viewport;
         float aspectRatio = (float)viewport.Width / viewport.Height;
-        
+
         Projection = Matrix.CreatePerspectiveFieldOfView(
             MathHelper.PiOver4,
             aspectRatio,
@@ -34,16 +34,16 @@ public class Camera
             1000f
         );
     }
-    
+
     public void SetTopDownFollow(Vector3 focusXz, float distance = 18f, float tiltDeg = 55f)
     {
         var tiltRad = MathHelper.ToRadians(tiltDeg);
-        
+
         // Position camera behind and above the focus point
         var offset = new Vector3(0, distance * (float)Math.Sin(tiltRad), -distance * (float)Math.Cos(tiltRad));
         Position = focusXz + offset;
         Target = focusXz;
-        
+
         UpdateView();
     }
 
@@ -51,19 +51,19 @@ public class Camera
     {
         View = Matrix.CreateLookAt(Position, Target, Vector3.Up);
     }
-    
+
     public Ray ScreenToRay(Vector2 screenPos)
     {
         var viewport = _graphicsDevice.Viewport;
-        
+
         var nearPoint = viewport.Unproject(
             new Vector3(screenPos.X, screenPos.Y, 0f),
             Projection, View, Matrix.Identity);
-            
+
         var farPoint = viewport.Unproject(
             new Vector3(screenPos.X, screenPos.Y, 1f),
             Projection, View, Matrix.Identity);
-            
+
         var direction = Vector3.Normalize(farPoint - nearPoint);
         return new Ray(nearPoint, direction);
     }

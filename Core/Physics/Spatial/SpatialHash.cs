@@ -13,7 +13,7 @@ public class SpatialHash(float cellSize)
         var bounds = collider.GetBounds();
         var minCell = GetCellCoord(bounds.Min.X, bounds.Min.Z);
         var maxCell = GetCellCoord(bounds.Max.X, bounds.Max.Z);
-        
+
         for (var x = (int)minCell.X; x <= maxCell.X; x++)
         {
             for (var z = (int)minCell.Y; z <= maxCell.Y; z++)
@@ -21,18 +21,18 @@ public class SpatialHash(float cellSize)
                 var cellKey = new Vector2(x, z);
                 if (!_grid.ContainsKey(cellKey))
                     _grid[cellKey] = new List<ICollider>();
-                    
+
                 _grid[cellKey].Add(collider);
             }
         }
     }
-    
+
     public IEnumerable<ICollider> QueryRadius(Vector3 position, float radius)
     {
         var center = GetCellCoord(position.X, position.Z);
         var cellRadius = (int)Math.Ceiling(radius / cellSize);
         var results = new HashSet<ICollider>();
-        
+
         for (int x = (int)center.X - cellRadius; x <= center.X + cellRadius; x++)
         {
             for (int z = (int)center.Y - cellRadius; z <= center.Y + cellRadius; z++)
@@ -45,10 +45,10 @@ public class SpatialHash(float cellSize)
                 }
             }
         }
-        
+
         return results;
     }
-    
+
     private Vector2 GetCellCoord(float x, float z)
     {
         return new Vector2(
@@ -56,7 +56,7 @@ public class SpatialHash(float cellSize)
             (float)Math.Floor(z / cellSize)
         );
     }
-    
+
     public void Clear()
     {
         _grid.Clear();

@@ -15,10 +15,10 @@ public class MyraService
     public void Initialize(Microsoft.Xna.Framework.Graphics.GraphicsDevice graphicsDevice, Microsoft.Xna.Framework.Game game, PerformanceTracker performanceTracker)
     {
         if (_isInitialized) return;
-        
+
         _myraFpsWindow = new MyraFpsWindow(performanceTracker);
         _myraFpsWindow.Initialize(game);
-        
+
         _isInitialized = true;
     }
 
