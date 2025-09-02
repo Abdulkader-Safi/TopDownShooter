@@ -294,22 +294,11 @@ public class Level2Scene : Scene
         {
             int yOffset = GameManager.Instance.ShowFps ? 30 : 10;
 
-            // Show collision box toggle status
-            var collisionText = GameManager.Instance.ShowCollisionBoxes ? "Collision Boxes: ON (F2)" : "Collision Boxes: OFF (F2)";
-            _spriteBatch.DrawString(_font, collisionText, new Vector2(10, yOffset), GameManager.Instance.ShowCollisionBoxes ? Color.Red : Color.Gray);
-
-            // Show debug info toggle status
-            var debugText = GameManager.Instance.ShowDebugInfo ? "Debug Info: ON (F1)" : "Debug Info: OFF (F1)";
-            _spriteBatch.DrawString(_font, debugText, new Vector2(10, yOffset + 20), GameManager.Instance.ShowDebugInfo ? Color.Cyan : Color.Gray);
-
-            // Show additional controls
-            _spriteBatch.DrawString(_font, "SPACE: Jump | F3: Toggle FPS | F4: Performance | F11: Fullscreen", new Vector2(10, yOffset + 40), Color.Gray);
-
             // Show player status
             if (_player != null)
             {
                 var groundedText = _player.Motor.IsGrounded ? "Grounded" : "Airborne";
-                _spriteBatch.DrawString(_font, $"Player: {groundedText}", new Vector2(10, yOffset + 60), _player.Motor.IsGrounded ? Color.Green : Color.Orange);
+                _spriteBatch.DrawString(_font, $"Player: {groundedText}", new Vector2(10, yOffset + 30), _player.Motor.IsGrounded ? Color.Green : Color.Orange);
             }
 
             // Show performance stats if enabled
