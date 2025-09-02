@@ -1,17 +1,18 @@
 # TopDownShooter
 
-A top-down shooter game built with MonoGame Framework targeting .NET 8.0, featuring a custom Entity-Component-System architecture, advanced collision detection, and level progression system.
+A top-down shooter game built with MonoGame Framework targeting .NET 8.0, featuring a modular **Core/Game architecture** where the Core framework is reusable across MonoGame projects and Game contains TopDownShooter-specific logic.
 
 ## Features
 
-- **Custom Entity-Component-System (ECS)** - Modular architecture with reusable components
-- **Advanced Collision Detection** - Spatial hashing for efficient AABB and Capsule collision
-- **Level Management System** - Multi-level progression with seamless transitions
-- **3D Rendering with 2D UI** - Mixed rendering pipeline with Myra UI framework
-- **Performance Monitoring** - Real-time FPS tracking and performance metrics
-- **Debug Visualization** - Comprehensive debug tools for collision boxes, aim vectors, and stats
-- **AI Pathfinding** - Enemy AI with navigation grid-based pathfinding
-- **Service Architecture** - Global services for Input, Audio, Assets, and UI management
+- **Modular Core/Game Architecture** - Reusable MonoGame framework (`Core/`) separated from game logic (`Game/`)
+- **Custom Entity-Component-System (ECS)** - Component-based architecture with Transform, ModelRenderer, CharacterMotor, etc.
+- **Dual Physics System** - Spatial hashing collision detection with BepuPhysics v2.4.0 integration foundation
+- **Level Management System** - Multi-level progression with seamless transitions and cycling support
+- **3D Rendering with 2D UI** - Mixed rendering pipeline with Myra UI framework and performance charts
+- **Performance Monitoring** - Real-time FPS tracking, performance metrics, and interactive charts (F5)
+- **Debug Visualization** - Comprehensive debug tools (F1-F4) for collision boxes, aim vectors, and performance stats
+- **AI Pathfinding** - Enemy AI with navigation grid-based pathfinding system
+- **Service Architecture** - Global services accessible via GameRoot static properties
 
 ## Prerequisites
 
@@ -73,60 +74,67 @@ dotnet clean
 - **F2** - Toggle collision box visualization
 - **F3** - Toggle FPS display
 - **F4** - Toggle performance statistics
+- **F5** - Toggle FPS chart window
 - **F11** - Toggle fullscreen
 - **Escape** - Exit game
 
 ## Architecture
 
-### Core Game Structure
+### Core/Game Split
 
-- **GameRoot** - Main game class extending MonoGame.Game with service initialization
-- **GameManager** - Singleton handling global settings, debug toggles, and window management
-- **SceneManager** - Manages scene lifecycle and transitions
-- **LevelManager** - Handles level progression with support for next/previous/cycling
+The project is organized into two main directories for modularity and reusability:
 
-### Entity-Component-System
+- **Core/** - Reusable MonoGame framework components (namespaced as `Core.*`)
+  - GameSystems, Framework (ECS), Services, Physics, Rendering, UI
+- **Game/** - TopDownShooter-specific implementations (namespaced as `Game.*`)
+  - Scenes, Gameplay (Player/Enemies/Combat), World management
 
-- **Entity** - Base entity class with component dictionary system
-- **Scene** - Abstract base for game scenes managing entity collections
-- **Components** - Transform, CharacterMotor, ModelRenderer, and custom components
-- **Interfaces** - IComponent, IUpdateable, IDrawable for component behaviors
+### Core Framework (Reusable)
 
-### Game Systems
+- **GameRoot** (`Core.GameSystems`) - Main game class with service initialization and static service access
+- **GameManager** (`Core.GameSystems`) - Global settings, debug toggles, window management
+- **Entity-Component-System** (`Core.Framework`) - Entity base class, Scene management, component system
+- **Services** (`Core.Services`) - InputService, AudioService, AssetService, MyraService, PhysicsService
+- **Physics** (`Core.Physics`) - Spatial hashing collision + BepuPhysics integration foundation
+- **Rendering** (`Core.Rendering`) - Camera, DebugDraw, Lighting utilities
 
-- **Physics** - Custom collision system with spatial hashing optimization
-- **Rendering** - 3D world rendering with Camera, ModelRenderer, and DebugDraw utilities
-- **Services** - Global services accessible via GameRoot static properties
-- **World** - Level generation, navigation grids, and transition triggers
+### Game Implementation (TopDownShooter)
+
+- **Scenes** (`Game.Scenes`) - StartMenuScene, GameScene, Level2Scene
+- **Player** (`Game.Gameplay.Player`) - PlayerController with movement, aiming, combat
+- **Enemies** (`Game.Gameplay.Enemies`) - AI entities like DummyChaser with pathfinding
+- **Combat** (`Game.Gameplay.Combat`) - Damage system with hitboxes and visual feedback
+- **World** (`Game.World`) - Level, LevelManager, NavGrid, LevelTransitionTrigger
 
 ## Project Structure
 
-### Core Files
-
-- `Program.cs` - Application entry point
-- `Game/Core/GameRoot.cs` - Main game class replacing traditional Game1.cs
-- `Game/Core/GameManager.cs` - Global game settings and window management
-- `Game/Core/Time.cs` - Static time management utilities
-
-### Framework
-
-- `Game/Framework/Entity.cs` - Base entity with component system
-- `Game/Framework/Scene.cs` - Abstract scene base class
-- `Game/Framework/SceneManager.cs` - Scene transition management
-- `Game/Framework/Components/` - Component implementations
-
-### Game Systems
-
-- `Game/Physics/` - Collision detection with spatial hashing
-- `Game/Rendering/` - 3D rendering, camera, and debug visualization
-- `Game/Services/` - Input, Audio, Asset, and UI services
-- `Game/World/` - Level management and navigation
-- `Game/Gameplay/` - Player controller, enemies, and combat
-
-### Content
-
-- `Content/` - Game assets managed by MonoGame Content Pipeline
-- `Content.mgcb` - MonoGame Content Builder configuration
+```bash
+TopDownShooter/
+├── Program.cs                    # Application entry point
+├── Core/                         # Reusable MonoGame Framework
+│   ├── GameSystems/             # Core game systems
+│   │   ├── GameRoot.cs          # Main game class
+│   │   ├── GameManager.cs       # Global settings/debug
+│   │   ├── Time.cs              # Time utilities
+│   │   └── Extensions.cs        # Extension methods
+│   ├── Framework/               # Entity-Component-System
+│   │   ├── Entity.cs            # Base entity class
+│   │   ├── Scene.cs             # Abstract scene base
+│   │   ├── SceneManager.cs      # Scene transitions
+│   │   ├── PerformanceTracker.cs # FPS monitoring
+│   │   └── Components/          # All component types
+│   ├── Services/                # Global services
+│   ├── Physics/                 # Physics & collision systems
+│   ├── Rendering/               # Camera & rendering utilities
+│   └── UI/                      # Generic UI components
+├── Game/                        # TopDownShooter Specific
+│   ├── Scenes/                  # Game scene implementations
+│   ├── Gameplay/                # Player, enemies, combat
+│   └── World/                   # Level management
+└── Content/                     # MonoGame assets
+    ├── Content.mgcb             # Content pipeline config
+    └── DefaultFont.spritefont   # UI font asset
+```
 
 ## Technology Stack
 
@@ -134,8 +142,8 @@ dotnet clean
 - **Platform**: Cross-platform desktop (Windows, macOS, Linux)
 - **Language**: C# with .NET 8.0
 - **UI Framework**: Myra UI for performance overlays and debug interface
-- **Architecture**: Entity-Component-System with Service Locator pattern
-- **Physics**: Custom collision system with spatial optimization
+- **Architecture**: Modular Core/Game split with Entity-Component-System and Service Locator patterns
+- **Physics**: Dual-layer system - spatial hashing collision + BepuPhysics v2.4.0 integration foundation
 
 ## Game Loop
 
@@ -149,6 +157,22 @@ The game uses MonoGame's fixed timestep pattern at 60 FPS:
 ## Performance
 
 - **Fixed 60 FPS** with VSync support
-- **Spatial Hashing** for O(1) collision detection
+- **Spatial Hashing** for O(1) collision detection in `Core.Physics.SpatialHash`
 - **Component Caching** to minimize allocations
-- **Real-time Metrics** via PerformanceTracker and FPS charts
+- **Real-time Metrics** via `PerformanceTracker` and interactive FPS charts (`MyraFpsWindow`)
+
+## Using the Core Framework
+
+### For New Projects
+
+1. **Copy the Core directory** - All files in `Core/` are reusable framework components
+2. **Update namespaces** - Change `Core.*` to your project's namespace (e.g., `MyGame.Core.*`)
+3. **Create your Game directory** - Implement game-specific logic with your own namespace
+4. **Follow the patterns** - Use Service Locator, ECS, and Scene Management patterns
+
+### Benefits of This Architecture
+
+- **Modularity** - Core framework can be reused across multiple MonoGame projects
+- **Clear Separation** - Game logic is isolated from reusable framework systems
+- **Maintainability** - Framework improvements don't break game-specific code
+- **Testability** - Core components can be unit tested independently
