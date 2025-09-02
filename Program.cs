@@ -1,5 +1,5 @@
 using System;
-using TopDownShooter.Game.Core;
+using Core.GameSystems;
 
 namespace TopDownShooter;
 

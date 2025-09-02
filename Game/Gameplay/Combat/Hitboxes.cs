@@ -1,13 +1,13 @@
 using System;
 using Microsoft.Xna.Framework;
-using TopDownShooter.Game.Core;
-using TopDownShooter.Game.Framework;
-using TopDownShooter.Game.Framework.Components;
-using TopDownShooter.Game.Gameplay.Enemies;
+using Core.GameSystems;
+using Core.Framework;
+using Core.Framework.Components;
+using Game.Gameplay.Enemies;
 
-namespace TopDownShooter.Game.Gameplay.Combat;
+namespace Game.Gameplay.Combat;
 
-public class Hitbox : Entity, TopDownShooter.Game.Framework.Components.IUpdateable
+public class Hitbox : Entity, Core.Framework.Components.IUpdateable
 {
     public Vector3 Position { get; init; }
     public float Radius { get; init; } = 1f;
@@ -50,7 +50,7 @@ public class Hitbox : Entity, TopDownShooter.Game.Framework.Components.IUpdateab
     }
 }
 
-public class DamageText : Entity, TopDownShooter.Game.Framework.Components.IUpdateable
+public class DamageText : Entity, Core.Framework.Components.IUpdateable
 {
     private Vector3 _startPosition;
     private Vector3 _velocity;

@@ -1,8 +1,9 @@
 using System;
-using TopDownShooter.Game.Core;
-using TopDownShooter.Game.Framework;
+using Core.GameSystems;
+using Core.Framework;
+using Game.Scenes;
 
-namespace TopDownShooter.Game.World;
+namespace Game.World;
 
 public class LevelManager
 {

@@ -1,10 +1,10 @@
 # TopDownShooter - Project Structure Documentation
 
-This document explains the architecture and purpose of each file in this MonoGame project. Use this as a reference for creating similar game projects.
+This document explains the architecture and purpose of each file in this MonoGame project. The project is split into **Core** (reusable framework) and **Game** (TopDownShooter-specific) components for modularity.
 
 ## Root Directory
 
-### Core Project Files
+### Project Files
 
 - **`Program.cs`** - Application entry point, creates and runs GameRoot instance
 - **`TopDownShooter.csproj`** - Project file with dependencies (MonoGame, Myra UI, BepuPhysics)
@@ -15,23 +15,25 @@ This document explains the architecture and purpose of each file in this MonoGam
 - **`CLAUDE.md`** - AI assistant instructions and project guidance
 - **`STRUCTURE.md`** - This documentation file
 
-## Game Directory Structure
+## Core Directory - Reusable Framework
 
-### `/Game/Core/` - Core Game Systems
+The **Core/** directory contains all reusable framework components that can be copied to other MonoGame projects.
+
+### `/Core/GameSystems/` - Core Game Systems
 
 - **`GameRoot.cs`** - Main game class (replaces Game1.cs), handles initialization, update/draw loops, and service management
 - **`GameManager.cs`** - Singleton for global settings, debug controls (F1-F5, F11), and configuration management
 - **`Time.cs`** - Static utility class for game timing and delta time calculations
 - **`Extensions.cs`** - Extension methods for common operations and utilities
 
-### `/Game/Framework/` - Entity-Component-System Framework
+### `/Core/Framework/` - Entity-Component-System Framework
 
 - **`Entity.cs`** - Base entity class with component system, Transform management, and lifecycle methods
 - **`Scene.cs`** - Abstract base class for game scenes, manages entity collections and update/draw cycles
 - **`SceneManager.cs`** - Handles scene transitions, loading/unloading, and scene lifecycle
 - **`PerformanceTracker.cs`** - FPS tracking and performance monitoring with history buffer
 
-#### `/Game/Framework/Components/` - Component System
+#### `/Core/Framework/Components/` - Component System
 
 - **`Transform.cs`** - Position, rotation, scale component for all entities
 - **`ModelRenderer.cs`** - 3D model rendering component with color, size, and visibility control
@@ -39,7 +41,7 @@ This document explains the architecture and purpose of each file in this MonoGam
 - **`RigidBodyComponent.cs`** - BepuPhysics integration component with Static/Kinematic/Dynamic body types
 - **`ColliderComponent.cs`** - Physics collider component with Box/Sphere/Capsule shape support
 
-### `/Game/Services/` - Global Service Layer
+### `/Core/Services/` - Global Service Layer
 
 - **`AssetService.cs`** - Content loading and management service
 - **`AudioService.cs`** - Sound effects and music management service
@@ -47,11 +49,11 @@ This document explains the architecture and purpose of each file in this MonoGam
 - **`MyraService.cs`** - UI framework service managing MyraUI windows and components
 - **`PhysicsService.cs`** - Physics system service managing both collision world and BepuPhysics integration
 
-### `/Game/UI/` - User Interface
+### `/Core/UI/` - Generic User Interface Components
 
 - **`MyraFpsWindow.cs`** - Performance monitoring window with real-time FPS chart and statistics
 
-### `/Game/Physics/` - Dual Physics System
+### `/Core/Physics/` - Physics Framework
 
 #### Legacy Collision System
 
@@ -69,15 +71,25 @@ This document explains the architecture and purpose of each file in this MonoGam
 - **`PhysicsDebugRenderer.cs`** - Debug visualization for physics bodies, velocities, and contact points
 - **`PhysicsTestEntity.cs`** - Test entity for verifying physics integration functionality
 
-#### `/Game/Physics/Spatial/` - Spatial Optimization
+#### `/Core/Physics/Spatial/` - Spatial Optimization
 
 - **`SpatialHash.cs`** - Spatial hashing grid for efficient collision queries and broad-phase detection
 
-### `/Game/Rendering/` - Rendering System
+### `/Core/Rendering/` - Rendering Framework
 
 - **`Camera.cs`** - 3D camera with projection matrices, view controls, and camera management
 - **`DebugDraw.cs`** - Debug visualization utilities for collision boxes, wireframes, and debug info
 - **`Lighting.cs`** - Lighting system management and light source handling
+
+## Game Directory - TopDownShooter Specific
+
+The **Game/** directory contains all game-specific logic and implementations unique to the TopDownShooter project.
+
+### `/Game/Scenes/` - Game Scene Implementations
+
+- **`StartMenuScene.cs`** - Main menu scene with title, start button, and game initialization
+- **`GameScene.cs`** - Level 1 gameplay scene containing player, enemies, and world entities
+- **`Level2Scene.cs`** - Level 2 implementation with specific entities and layout
 
 ### `/Game/Gameplay/` - Game Logic
 
@@ -99,12 +111,6 @@ This document explains the architecture and purpose of each file in this MonoGam
 - **`LevelManager.cs`** - Singleton managing level loading, transitions, and current level state
 - **`LevelTransitionTrigger.cs`** - Trigger entity for level transitions and area changes
 - **`NavGrid.cs`** - Navigation mesh/grid system for AI pathfinding
-
-### `/Game/` - Scene Implementations
-
-- **`StartMenuScene.cs`** - Main menu scene with title, start button, and game initialization
-- **`GameScene.cs`** - Level 1 gameplay scene containing player, enemies, and world entities
-- **`Level2Scene.cs`** - Level 2 implementation with specific entities and layout
 
 ## Content Directory
 
@@ -134,6 +140,29 @@ Global services accessible via `GameRoot.Input`, `GameRoot.Audio`, `GameRoot.Ass
 - Automatic update/draw lifecycle through SceneManager
 - Entity management per scene
 - Game flow: StartMenuScene → GameScene/Level2Scene via LevelManager
+
+## Namespace Organization
+
+The project uses a clear namespace structure reflecting the Core/Game split:
+
+### Core Namespaces (Reusable Framework)
+
+- **`Core.GameSystems`** - Core game systems (GameRoot, GameManager, Time, Extensions)
+- **`Core.Framework`** - ECS framework (Entity, Scene, SceneManager, PerformanceTracker)
+- **`Core.Framework.Components`** - All component types
+- **`Core.Services`** - Global services (Input, Audio, Assets, Myra, Physics)
+- **`Core.Physics`** - Physics systems and collision detection
+- **`Core.Physics.Spatial`** - Spatial optimization (SpatialHash)
+- **`Core.Rendering`** - Rendering utilities (Camera, DebugDraw, Lighting)
+- **`Core.UI`** - Generic UI components (MyraFpsWindow)
+
+### Game Namespaces (TopDownShooter Specific)
+
+- **`Game.Scenes`** - Game scene implementations
+- **`Game.Gameplay.Player`** - Player-specific systems
+- **`Game.Gameplay.Enemies`** - Enemy AI and behavior
+- **`Game.Gameplay.Combat`** - Combat and damage systems
+- **`Game.World`** - Level management and world systems
 
 ### Physics Integration
 
@@ -176,11 +205,28 @@ Global services accessible via `GameRoot.Input`, `GameRoot.Audio`, `GameRoot.Ass
 
 ## Getting Started with This Structure
 
-1. Copy the framework files (`/Game/Framework/`, `/Game/Core/`, `/Game/Services/`)
-2. Implement your game-specific scenes in `/Game/`
-3. Add gameplay systems in `/Game/Gameplay/`
-4. Extend the component system for your needs
-5. Use the service locator pattern for global systems
-6. Follow the existing patterns for new entities and components
+### For New Projects (Using Core Framework)
 
-This structure provides a solid foundation for 3D MonoGame projects with modern architecture patterns, comprehensive debugging tools, and extensible systems.
+1. **Copy the Core directory** - All files in `/Core/` are reusable framework components
+2. **Update namespaces** - Change `Core.*` to your project's core namespace (e.g., `YourGame.Core.*`)
+3. **Implement game-specific content** - Create your own `/Game/` directory with scenes and gameplay
+4. **Extend the framework** - Add new components, services, and systems as needed
+5. **Follow established patterns** - Use the service locator, ECS, and scene management patterns
+
+### For Extending This Project
+
+1. **Game-specific content** goes in `/Game/` directory
+2. **Framework improvements** go in `/Core/` directory
+3. **Maintain namespace separation** between Core (reusable) and Game (specific)
+4. **Use existing services** via GameRoot static properties
+5. **Follow component pattern** for new entity behaviors
+
+## Benefits of This Split
+
+- **Modularity**: Core framework can be reused across multiple projects
+- **Clear separation**: Game logic is isolated from reusable systems
+- **Maintainability**: Changes to framework don't affect game-specific code
+- **Testability**: Core components can be unit tested independently
+- **Documentation**: Clear distinction between what's reusable vs project-specific
+
+This structure provides a solid foundation for 3D MonoGame projects with modern architecture patterns, comprehensive debugging tools, and extensible systems that can be easily adapted for other games.

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace TopDownShooter.Game.World;
+namespace Game.World;
 
 public class NavGrid
 {

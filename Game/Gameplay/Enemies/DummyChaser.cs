@@ -1,16 +1,16 @@
 using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
-using TopDownShooter.Game.Core;
-using TopDownShooter.Game.Framework;
-using TopDownShooter.Game.Framework.Components;
-using TopDownShooter.Game.Gameplay.Combat;
-using TopDownShooter.Game.Gameplay.Player;
-using TopDownShooter.Game.Physics;
+using Core.GameSystems;
+using Core.Framework;
+using Core.Framework.Components;
+using Game.Gameplay.Combat;
+using Game.Gameplay.Player;
+using Core.Physics;
 
-namespace TopDownShooter.Game.Gameplay.Enemies;
+namespace Game.Gameplay.Enemies;
 
-public class DummyChaser : Entity, TopDownShooter.Game.Framework.Components.IUpdateable
+public class DummyChaser : Entity, Core.Framework.Components.IUpdateable
 {
     private readonly CharacterMotor _motor;
     private readonly ModelRenderer _renderer;

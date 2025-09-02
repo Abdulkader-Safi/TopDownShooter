@@ -1,10 +1,10 @@
 using Microsoft.Xna.Framework;
-using TopDownShooter.Game.Framework;
-using TopDownShooter.Game.Framework.Components;
-using TopDownShooter.Game.Gameplay.Player;
-using TopDownShooter.Game.Physics;
+using Core.Framework;
+using Core.Framework.Components;
+using Game.Gameplay.Player;
+using Core.Physics;
 
-namespace TopDownShooter.Game.World;
+namespace Game.World;
 
 public enum LevelTransitionDirection
 {
@@ -12,7 +12,7 @@ public enum LevelTransitionDirection
     Previous
 }
 
-public class LevelTransitionTrigger : Entity, Framework.Components.IUpdateable
+public class LevelTransitionTrigger : Entity, Core.Framework.Components.IUpdateable
 {
     private readonly AabbCollider _triggerCollider;
     private readonly CollisionWorld _collisionWorld;

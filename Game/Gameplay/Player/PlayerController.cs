@@ -1,16 +1,16 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using TopDownShooter.Game.Core;
-using TopDownShooter.Game.Framework;
-using TopDownShooter.Game.Framework.Components;
-using TopDownShooter.Game.Gameplay.Combat;
-using TopDownShooter.Game.Rendering;
-using TopDownShooter.Game.Services;
+using Core.GameSystems;
+using Core.Framework;
+using Core.Framework.Components;
+using Game.Gameplay.Combat;
+using Core.Rendering;
+using Core.Services;
 
-namespace TopDownShooter.Game.Gameplay.Player;
+namespace Game.Gameplay.Player;
 
-public class PlayerController : Entity, TopDownShooter.Game.Framework.Components.IUpdateable
+public class PlayerController : Entity, Core.Framework.Components.IUpdateable
 {
     private readonly CharacterMotor _motor;
     private readonly ModelRenderer _renderer;

@@ -1,9 +1,9 @@
 using Microsoft.Xna.Framework;
-using TopDownShooter.Game.Framework;
-using TopDownShooter.Game.Framework.Components;
-using TopDownShooter.Game.Physics;
+using Core.Framework;
+using Core.Framework.Components;
+using Core.Physics;
 
-namespace TopDownShooter.Game.World;
+namespace Game.World;
 
 public class Level
 {
