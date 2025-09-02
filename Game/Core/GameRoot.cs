@@ -19,6 +19,7 @@ public class GameRoot : Microsoft.Xna.Framework.Game
     public static AudioService Audio { get; private set; }
     public static AssetService Assets { get; private set; }
     public static MyraService Myra { get; private set; }
+    public static PhysicsService Physics { get; private set; }
 
     public SceneManager SceneManager => _sceneManager;
 
@@ -56,6 +57,7 @@ public class GameRoot : Microsoft.Xna.Framework.Game
         Audio = new AudioService();
         Assets = new AssetService();
         Myra = new MyraService();
+        Physics = new PhysicsService();
 
         _sceneManager = new SceneManager();
 
@@ -66,6 +68,7 @@ public class GameRoot : Microsoft.Xna.Framework.Game
     {
         Assets.Initialize(Content, GraphicsDevice);
         Myra.Initialize(GraphicsDevice, this, _performanceTracker);
+        Physics.Initialize();
 
         // Start with the main menu instead of directly loading the first level
         var startMenu = new StartMenuScene();
@@ -82,6 +85,7 @@ public class GameRoot : Microsoft.Xna.Framework.Game
 
         Input.Update();
         _gameManager.Update();
+        Physics.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
         Myra.Update(gameTime);
         _sceneManager.Update();
 
@@ -116,5 +120,15 @@ public class GameRoot : Microsoft.Xna.Framework.Game
     private void OnWindowTitleChanged(string title)
     {
         Window.Title = title;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Physics?.Shutdown();
+        }
+        
+        base.Dispose(disposing);
     }
 }
