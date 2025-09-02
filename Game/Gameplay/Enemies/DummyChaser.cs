@@ -16,8 +16,10 @@ public class DummyChaser : Entity, TopDownShooter.Game.Framework.Components.IUpd
     private readonly ModelRenderer _renderer;
     private float _health = 100f;
     private float _flashTimer = 0f;
+    private float _deathTimer = 0f;
     private const float MoveSpeed = 2.5f;
     private const float FlashDuration = 0.2f;
+    private const float DeathDisplayTime = 1f;
     
     public float Health => _health;
     public bool IsDead => _health <= 0f;
@@ -36,15 +38,20 @@ public class DummyChaser : Entity, TopDownShooter.Game.Framework.Components.IUpd
     {
         base.Update();
         
-        if (IsDead) return;
+        if (IsDead)
+        {
+            _deathTimer += Time.Delta;
+            UpdateVisuals();
+            
+            if (_deathTimer >= DeathDisplayTime)
+            {
+                Scene?.RemoveEntity(this);
+            }
+            return;
+        }
         
         UpdateMovement();
         UpdateVisuals();
-        
-        if (_health <= 0f)
-        {
-            Scene?.RemoveEntity(this);
-        }
     }
     
     private void UpdateMovement()
@@ -68,6 +75,12 @@ public class DummyChaser : Entity, TopDownShooter.Game.Framework.Components.IUpd
     
     private void UpdateVisuals()
     {
+        if (IsDead)
+        {
+            _renderer.Color = Color.Black;
+            return;
+        }
+        
         if (_flashTimer > 0f)
         {
             _flashTimer -= Time.Delta;

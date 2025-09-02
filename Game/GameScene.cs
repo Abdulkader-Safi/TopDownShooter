@@ -1,7 +1,5 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using TopDownShooter.Game.Core;
 using TopDownShooter.Game.Framework;
 using TopDownShooter.Game.Framework.Components;
@@ -206,8 +204,8 @@ public class GameScene : Scene
             _spriteBatch.DrawString(_font, debugText, new Vector2(10, yOffset + 20), GameManager.Instance.ShowDebugInfo ? Color.Cyan : Color.Gray);
 
             // Show additional controls
-            _spriteBatch.DrawString(_font, "SPACE: Jump | F3: Toggle FPS | F4: Performance | F11: Fullscreen", new Vector2(10, yOffset + 40), Color.Gray);
-            
+            _spriteBatch.DrawString(_font, "SPACE: Jump | F3: Toggle FPS | F4: Performance | F5: FPS Chart | F11: Fullscreen", new Vector2(10, yOffset + 40), Color.Gray);
+
             // Show player status
             if (_player != null)
             {

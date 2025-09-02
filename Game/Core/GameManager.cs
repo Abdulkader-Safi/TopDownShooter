@@ -20,6 +20,7 @@ public class GameManager
     public bool ShowDebugInfo { get; private set; } = false;
     public bool ShowFps { get; private set; } = true;
     public bool ShowPlayerOutline { get; set; } = true;
+    public bool ShowFpsChart { get; private set; } = true;
 
     // Gameplay Settings
     public float PlayerMoveSpeed { get; private set; } = 5f;
@@ -42,6 +43,7 @@ public class GameManager
     private bool _previousF2State = false;
     private bool _previousF3State = false;
     private bool _previousF4State = false;
+    private bool _previousF5State = false;
     private bool _previousF11State = false;
 
     // Events
@@ -57,6 +59,7 @@ public class GameManager
     public void Update()
     {
         HandleDebugInput();
+        SyncFpsChartState();
     }
 
     private void HandleDebugInput()
@@ -90,6 +93,18 @@ public class GameManager
             ShowPerformanceStats = !ShowPerformanceStats;
         }
         _previousF4State = keyboard.IsKeyDown(Keys.F4);
+
+        // F5 - Toggle FPS Chart
+        if (keyboard.IsKeyDown(Keys.F5) && !_previousF5State)
+        {
+            ShowFpsChart = !ShowFpsChart;
+            // Also toggle Myra window visibility
+            if (GameRoot.Myra?.FpsWindow != null)
+            {
+                GameRoot.Myra.FpsWindow.IsVisible = ShowFpsChart;
+            }
+        }
+        _previousF5State = keyboard.IsKeyDown(Keys.F5);
 
         // F11 - Toggle Fullscreen
         if (keyboard.IsKeyDown(Keys.F11) && !_previousF11State)
@@ -162,6 +177,15 @@ public class GameManager
         ShowPerformanceStats = true;
     }
 
+    private void SyncFpsChartState()
+    {
+        // Sync GameManager state with actual window visibility
+        if (GameRoot.Myra?.FpsWindow != null)
+        {
+            ShowFpsChart = GameRoot.Myra.FpsWindow.IsVisible;
+        }
+    }
+
     // Debug helper methods
     public string GetDebugInfo()
     {
@@ -170,6 +194,7 @@ public class GameManager
                $"Fullscreen: {IsFullscreen}\n" +
                $"Collision Boxes: {ShowCollisionBoxes}\n" +
                $"Debug Info: {ShowDebugInfo}\n" +
+               $"FPS Chart: {ShowFpsChart}\n" +
                $"Player Speed: {PlayerMoveSpeed}\n" +
                $"Camera Distance: {CameraDistance}\n" +
                $"Camera Tilt: {CameraTilt}°";
@@ -187,6 +212,7 @@ public class GameManager
         ShowDebugInfo = false;
         ShowFps = true;
         ShowPlayerOutline = true;
+        ShowFpsChart = false;
 
         PlayerMoveSpeed = 5f;
         PlayerDashForce = 15f;

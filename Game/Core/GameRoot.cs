@@ -11,14 +11,15 @@ namespace TopDownShooter.Game.Core;
 public class GameRoot : Microsoft.Xna.Framework.Game
 {
     private readonly GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
     private SceneManager _sceneManager;
     private readonly GameManager _gameManager;
+    private readonly PerformanceTracker _performanceTracker;
 
     public static GameRoot Instance { get; private set; }
     public static InputService Input { get; private set; }
     public static AudioService Audio { get; private set; }
     public static AssetService Assets { get; private set; }
+    public static MyraService Myra { get; private set; }
 
     public SceneManager SceneManager => _sceneManager;
 
@@ -33,8 +34,9 @@ public class GameRoot : Microsoft.Xna.Framework.Game
         IsFixedTimeStep = true;
         TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0);
 
-        // Initialize GameManager first
+        // Initialize GameManager and PerformanceTracker
         _gameManager = new GameManager();
+        _performanceTracker = new PerformanceTracker();
 
         // Setup window and graphics based on GameManager settings
         Window.Title = _gameManager.WindowTitle;
@@ -54,6 +56,7 @@ public class GameRoot : Microsoft.Xna.Framework.Game
         Input = new InputService();
         Audio = new AudioService();
         Assets = new AssetService();
+        Myra = new MyraService();
 
         _sceneManager = new SceneManager();
 
@@ -62,21 +65,23 @@ public class GameRoot : Microsoft.Xna.Framework.Game
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-
         Assets.Initialize(Content, GraphicsDevice);
+        Myra.Initialize(GraphicsDevice, this, _performanceTracker);
+        
         LevelManager.Instance.LoadFirstLevel();
     }
 
     protected override void Update(GameTime gameTime)
     {
         Time.Update(gameTime);
+        _performanceTracker.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
         if (Input.IsKeyPressed(Keys.Escape))
             Exit();
 
         Input.Update();
         _gameManager.Update();
+        Myra.Update(gameTime);
         _sceneManager.Update();
 
         base.Update(gameTime);
@@ -87,6 +92,9 @@ public class GameRoot : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _sceneManager.Draw();
+        
+        // Draw Myra UI (includes FPS chart)
+        Myra.Draw();
 
         base.Draw(gameTime);
     }
