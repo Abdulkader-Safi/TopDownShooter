@@ -88,14 +88,16 @@ This document explains the architecture and purpose of each file in this MonoGam
 
 ### `/Game/` - Scene Implementations
 
-- **`GameScene.cs`** - Main gameplay scene containing player, enemies, and world entities
-- **`Level2Scene.cs`** - Second level implementation with specific entities and layout
+- **`StartMenuScene.cs`** - Main menu scene with title, start button, and game initialization
+- **`GameScene.cs`** - Level 1 gameplay scene containing player, enemies, and world entities
+- **`Level2Scene.cs`** - Level 2 implementation with specific entities and layout
 
 ## Content Directory
 
 ### `/Content/` - Game Assets
 
 - **`Content.mgcb`** - MonoGame Content Pipeline project file for asset compilation
+- **`DefaultFont.spritefont`** - Font descriptor for UI text rendering (Arial 14pt)
 - **`bin/`** - Compiled content assets (XNB files)
 - **`obj/`** - Intermediate build files
 
@@ -116,6 +118,7 @@ Global services accessible via `GameRoot.Input`, `GameRoot.Audio`, `GameRoot.Ass
 - Scenes inherit from `Scene` base class
 - Automatic update/draw lifecycle through SceneManager
 - Entity management per scene
+- Game flow: StartMenuScene → GameScene/Level2Scene via LevelManager
 
 ### Physics Integration
 
@@ -129,10 +132,19 @@ Global services accessible via `GameRoot.Input`, `GameRoot.Audio`, `GameRoot.Ass
 2. **Fixed Timestep**: 60 FPS with vsync for consistent gameplay
 3. **3D Rendering**: 3D world with 2D UI overlay approach
 4. **MyraUI**: Modern UI framework replacing ImGui for better .NET 8 compatibility
-5. **Component System**: Modular, reusable components for game entities
-6. **Singleton Services**: Global access to input, audio, assets, and UI systems
+5. **SpriteFont**: MonoGame font system for UI text rendering
+6. **Component System**: Modular, reusable components for game entities
+7. **Singleton Services**: Global access to input, audio, assets, and UI systems
 
-## Debug Controls
+## Controls
+
+### Menu Controls
+
+- **Click START button**: Begin game from main menu
+- **ENTER/SPACE**: Alternative way to start game from menu
+- **Escape**: Exit game
+
+### Debug Controls (In-Game)
 
 - **F1**: Toggle debug info and aim visualization
 - **F2**: Toggle collision box visualization

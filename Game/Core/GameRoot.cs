@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TopDownShooter.Game.Framework;
 using TopDownShooter.Game.Services;
-using TopDownShooter.Game.World;
 
 namespace TopDownShooter.Game.Core;
 
@@ -67,8 +66,10 @@ public class GameRoot : Microsoft.Xna.Framework.Game
     {
         Assets.Initialize(Content, GraphicsDevice);
         Myra.Initialize(GraphicsDevice, this, _performanceTracker);
-        
-        LevelManager.Instance.LoadFirstLevel();
+
+        // Start with the main menu instead of directly loading the first level
+        var startMenu = new StartMenuScene();
+        _sceneManager.LoadScene(startMenu);
     }
 
     protected override void Update(GameTime gameTime)
@@ -92,7 +93,7 @@ public class GameRoot : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _sceneManager.Draw();
-        
+
         // Draw Myra UI (includes FPS chart)
         Myra.Draw();
 
