@@ -7,7 +7,7 @@ This document explains the architecture and purpose of each file in this MonoGam
 ### Core Project Files
 
 - **`Program.cs`** - Application entry point, creates and runs GameRoot instance
-- **`TopDownShooter.csproj`** - Project file with dependencies (MonoGame, Myra UI)
+- **`TopDownShooter.csproj`** - Project file with dependencies (MonoGame, Myra UI, BepuPhysics)
 - **`TopDownShooter.sln`** - Visual Studio solution file
 - **`app.manifest`** - Windows application manifest for DPI awareness
 - **`Icon.bmp`** / **`Icon.ico`** - Application icons
@@ -36,6 +36,8 @@ This document explains the architecture and purpose of each file in this MonoGam
 - **`Transform.cs`** - Position, rotation, scale component for all entities
 - **`ModelRenderer.cs`** - 3D model rendering component with color, size, and visibility control
 - **`CharacterMotor.cs`** - Physics-based movement component with collision detection and response
+- **`RigidBodyComponent.cs`** - BepuPhysics integration component with Static/Kinematic/Dynamic body types
+- **`ColliderComponent.cs`** - Physics collider component with Box/Sphere/Capsule shape support
 
 ### `/Game/Services/` - Global Service Layer
 
@@ -43,17 +45,29 @@ This document explains the architecture and purpose of each file in this MonoGam
 - **`AudioService.cs`** - Sound effects and music management service
 - **`InputService.cs`** - Keyboard, mouse, and gamepad input handling service
 - **`MyraService.cs`** - UI framework service managing MyraUI windows and components
+- **`PhysicsService.cs`** - Physics system service managing both collision world and BepuPhysics integration
 
 ### `/Game/UI/` - User Interface
 
 - **`MyraFpsWindow.cs`** - Performance monitoring window with real-time FPS chart and statistics
 
-### `/Game/Physics/` - Physics System
+### `/Game/Physics/` - Dual Physics System
+
+#### Legacy Collision System
 
 - **`CollisionWorld.cs`** - Physics world management with spatial hashing for efficient collision detection
 - **`ICollider.cs`** - Interface for collision detection components
 - **`AabbCollider.cs`** - Axis-Aligned Bounding Box collider implementation
 - **`CapsuleCollider.cs`** - Capsule collider implementation for character physics
+
+#### BepuPhysics Integration
+
+- **`SimpleBepuPhysicsWorld.cs`** - Foundation layer for BepuPhysics v2.4.0 integration
+- **`VectorConversions.cs`** - Extension methods for converting between MonoGame and BepuPhysics vector types
+- **`PhysicsBodyFactory.cs`** - Factory methods for creating common physics body configurations
+- **`PhysicsCollisionBridge.cs`** - Bridge layer connecting legacy collision system with BepuPhysics
+- **`PhysicsDebugRenderer.cs`** - Debug visualization for physics bodies, velocities, and contact points
+- **`PhysicsTestEntity.cs`** - Test entity for verifying physics integration functionality
 
 #### `/Game/Physics/Spatial/` - Spatial Optimization
 
@@ -97,7 +111,7 @@ This document explains the architecture and purpose of each file in this MonoGam
 ### `/Content/` - Game Assets
 
 - **`Content.mgcb`** - MonoGame Content Pipeline project file for asset compilation
-- **`DefaultFont.spritefont`** - Font descriptor for UI text rendering (Arial 14pt)
+- **`DefaultFont.spritefont`** - Font descriptor for UI text rendering (Arial 14pt with extended Latin character support)
 - **`bin/`** - Compiled content assets (XNB files)
 - **`obj/`** - Intermediate build files
 
@@ -105,13 +119,14 @@ This document explains the architecture and purpose of each file in this MonoGam
 
 ### Service Locator Pattern
 
-Global services accessible via `GameRoot.Input`, `GameRoot.Audio`, `GameRoot.Assets`, `GameRoot.Myra`
+Global services accessible via `GameRoot.Input`, `GameRoot.Audio`, `GameRoot.Assets`, `GameRoot.Myra`, `GameRoot.Physics`
 
 ### Entity-Component-System (ECS)
 
 - Entities use composition over inheritance
 - Add components via `AddComponent<T>()`
 - Retrieve components via `GetComponent<T>()`
+- Physics helper methods: `entity.CreateDynamicBox(Vector3.One)`, `entity.GetRigidBody()`, `entity.HasPhysicsBody()`
 
 ### Scene Management
 
@@ -122,19 +137,24 @@ Global services accessible via `GameRoot.Input`, `GameRoot.Audio`, `GameRoot.Ass
 
 ### Physics Integration
 
-- Spatial hashing for efficient collision detection
-- Component-based colliders (AABB, Capsule)
-- Collision world manages all physics interactions
+**Dual-Layer Physics System:**
+
+- **Legacy System**: Spatial hashing for efficient collision detection with AABB and Capsule colliders
+- **BepuPhysics Integration**: Foundation components (RigidBodyComponent, ColliderComponent) with factory methods
+- **Bridge Layer**: PhysicsCollisionBridge enables gradual migration between systems
+- **Debug Visualization**: PhysicsDebugRenderer for visualizing physics bodies, velocities, and contact points
 
 ## Key Design Decisions
 
 1. **MonoGame Framework**: Uses MonoGame 3.8.\* with DesktopGL for cross-platform support
-2. **Fixed Timestep**: 60 FPS with vsync for consistent gameplay
-3. **3D Rendering**: 3D world with 2D UI overlay approach
-4. **MyraUI**: Modern UI framework replacing ImGui for better .NET 8 compatibility
-5. **SpriteFont**: MonoGame font system for UI text rendering
-6. **Component System**: Modular, reusable components for game entities
-7. **Singleton Services**: Global access to input, audio, assets, and UI systems
+2. **BepuPhysics Integration**: BepuPhysics v2.4.0 foundation with gradual migration approach
+3. **Fixed Timestep**: 60 FPS with vsync for consistent gameplay
+4. **3D Rendering**: 3D world with 2D UI overlay approach
+5. **MyraUI**: Modern UI framework replacing ImGui for better .NET 8 compatibility
+6. **Extended SpriteFont**: MonoGame font system with extended Latin character support (includes degree symbol)
+7. **Component System**: Modular, reusable components including physics integration
+8. **Singleton Services**: Global access to input, audio, assets, UI, and physics systems
+9. **Hybrid Physics**: Dual-layer physics system for gradual migration from spatial hashing to BepuPhysics
 
 ## Controls
 
