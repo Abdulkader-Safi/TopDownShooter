@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Core.GameSystems;
@@ -9,9 +10,10 @@ public class GameManager
     public static GameManager Instance { get; private set; }
 
     // Graphics Settings
+    public const GraphicsProfile graphicsProfile = GraphicsProfile.HiDef;
     public int WindowWidth { get; private set; } = 1280;
     public int WindowHeight { get; private set; } = 720;
-    public string WindowTitle { get; private set; } = "Top Down Shooter - MonoGame";
+    public string WindowTitle { get; private set; } = "Learn Monogame 3D";
     public bool IsFullscreen { get; private set; } = false;
     public bool VSync { get; private set; } = true;
 
@@ -114,67 +116,10 @@ public class GameManager
         _previousF11State = keyboard.IsKeyDown(Keys.F11);
     }
 
-    private void SetResolution(int width, int height)
-    {
-        if (width <= 0 || height <= 0) return;
-        WindowWidth = width;
-        WindowHeight = height;
-        ResolutionChanged?.Invoke(width, height);
-    }
-
     private void ToggleFullscreen()
     {
         IsFullscreen = !IsFullscreen;
         FullscreenChanged?.Invoke(IsFullscreen);
-    }
-
-    public void SetWindowTitle(string title)
-    {
-        if (string.IsNullOrEmpty(title)) return;
-        WindowTitle = title;
-        WindowTitleChanged?.Invoke(title);
-    }
-
-    private void SetTargetFps(int fps)
-    {
-        if (fps is > 0 and <= 300)
-        {
-            TargetFps = fps;
-        }
-    }
-
-    // Preset resolution methods
-    private void SetResolution720P() => SetResolution(1280, 720);
-    private void SetResolution1080P() => SetResolution(1920, 1080);
-    public void SetResolution1440P() => SetResolution(2560, 1440);
-    public void SetResolutionCustom(int width, int height) => SetResolution(width, height);
-
-    // Performance preset methods
-    public void SetLowQualityPreset()
-    {
-        SetResolution720P();
-        SetTargetFps(30);
-        ShowCollisionBoxes = false;
-        ShowDebugInfo = false;
-        ShowPerformanceStats = false;
-    }
-
-    public void SetMediumQualityPreset()
-    {
-        SetResolution720P();
-        SetTargetFps(60);
-        ShowCollisionBoxes = true;
-        ShowDebugInfo = false;
-        ShowPerformanceStats = false;
-    }
-
-    public void SetHighQualityPreset()
-    {
-        SetResolution1080P();
-        SetTargetFps(60);
-        ShowCollisionBoxes = true;
-        ShowDebugInfo = true;
-        ShowPerformanceStats = true;
     }
 
     private void SyncFpsChartState()
@@ -198,38 +143,5 @@ public class GameManager
                $"Player Speed: {PlayerMoveSpeed}\n" +
                $"Camera Distance: {CameraDistance}\n" +
                $"Camera Tilt: {CameraTilt}°";
-    }
-
-    public void ResetToDefaults()
-    {
-        WindowWidth = 1280;
-        WindowHeight = 720;
-        WindowTitle = "Top Down Shooter - MonoGame";
-        IsFullscreen = false;
-        VSync = true;
-
-        ShowCollisionBoxes = true;
-        ShowDebugInfo = false;
-        ShowFps = true;
-        ShowPlayerOutline = true;
-        ShowFpsChart = false;
-
-        PlayerMoveSpeed = 5f;
-        PlayerDashForce = 15f;
-        PlayerDashCooldown = 1f;
-        CameraDistance = 18f;
-        CameraTilt = 55f;
-
-        MasterVolume = 1f;
-        SfxVolume = 0.8f;
-        MusicVolume = 0.6f;
-
-        TargetFps = 60;
-        ShowPerformanceStats = false;
-
-        // Trigger events to update the game
-        ResolutionChanged?.Invoke(WindowWidth, WindowHeight);
-        FullscreenChanged?.Invoke(IsFullscreen);
-        WindowTitleChanged?.Invoke(WindowTitle);
     }
 }

@@ -45,6 +45,7 @@ public class GameRoot : Microsoft.Xna.Framework.Game
         _graphics.PreferredBackBufferHeight = _gameManager.WindowHeight;
         _graphics.IsFullScreen = _gameManager.IsFullscreen;
         _graphics.SynchronizeWithVerticalRetrace = _gameManager.VSync;
+        _graphics.GraphicsProfile = GameManager.graphicsProfile;
 
         // Subscribe to GameManager events
         _gameManager.ResolutionChanged += OnResolutionChanged;
